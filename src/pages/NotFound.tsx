@@ -1,9 +1,13 @@
+import ResponsiveLayout from '../components/common/ResponsiveLayout'
+
 const NotFound = () => {
   return (
-    <div className='flex min-h-screen items-center justify-center bg-gray-100 p-4'>
-      <h1 className='mb-4 text-2xl font-bold'>404 - Page Not Found</h1>
-      <p>The page you are looking for does not exist.</p>
-    </div>
+    <ResponsiveLayout>
+      <div className='mx-auto w-full max-w-md'>
+        <h1 className='mb-6 text-center text-3xl font-bold text-gray-900 dark:text-white'>404 - Page Not Found</h1>
+        <p className='text-center text-gray-600 dark:text-gray-300'>The page you are looking for does not exist.</p>
+      </div>
+    </ResponsiveLayout>
   )
 }
 

@@ -1,9 +1,20 @@
-import { defineConfig, presetUno, presetIcons, presetWind } from 'unocss'
+import { defineConfig, presetUno, presetIcons, presetAttributify } from 'unocss'
 
 export default defineConfig({
-  presets: [
-    presetUno(), // 기본 스타일 프리셋
-    presetWind(), // Windi CSS 프리셋
-    presetIcons(), // 아이콘 프리셋,
+  presets: [presetUno(), presetIcons(), presetAttributify()],
+  theme: {
+    breakpoints: {
+      sm: '640px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
+    },
+  },
+  shortcuts: [
+    {
+      'dark-mode': 'dark:bg-gray-800 dark:text-white',
+      'light-mode': 'light:bg-gray-100 light:text-gray-900',
+    },
   ],
 })
