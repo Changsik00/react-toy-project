@@ -26,7 +26,7 @@ module.exports = {
       'error',
       {
         singleQuote: true,
-        printWidth: 120,
+        printWidth: 80,
         tabWidth: 2,
         semi: false,
         jsxSingleQuote: true, // JSX에서 single quote 사용

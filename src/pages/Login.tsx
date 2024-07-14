@@ -4,10 +4,14 @@ const Login = () => {
   return (
     <ResponsiveLayout>
       <div className='mx-auto w-full max-w-md'>
-        <h1 className='mb-6 text-center text-3xl font-bold text-gray-900 dark:text-white'>Login</h1>
+        <h1 className='mb-6 text-center text-3xl font-bold text-gray-900 dark:text-white'>
+          Login
+        </h1>
         <form className='space-y-6'>
           <div>
-            <label className='mb-2 block text-gray-600 dark:text-gray-300'>Email</label>
+            <label className='mb-2 block text-gray-600 dark:text-gray-300'>
+              Email
+            </label>
             <input
               type='email'
               className='w-full rounded-lg border border-gray-300 p-3 focus:border-blue-500 focus:outline-none'
@@ -16,7 +20,9 @@ const Login = () => {
             />
           </div>
           <div>
-            <label className='mb-2 block text-gray-600 dark:text-gray-300'>Password</label>
+            <label className='mb-2 block text-gray-600 dark:text-gray-300'>
+              Password
+            </label>
             <input
               type='password'
               className='w-full rounded-lg border border-gray-300 p-3 focus:border-blue-500 focus:outline-none'
