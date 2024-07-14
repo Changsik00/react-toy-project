@@ -28,6 +28,6 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true
   },
-  "include": ["src", ".eslintrc.cjs", "src/**/*.{ts,tsx,js,jsx}"],
+  "include": ["src", "src/**/*.{ts,tsx,js,jsx}", "uno.config.ts", "vite.config.ts", ".eslintrc.cjs"],
   "exclude": ["node_modules", "dist"]
 }

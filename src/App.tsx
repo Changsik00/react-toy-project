@@ -8,7 +8,14 @@ function App() {
 
   return (
     <>
-      <div>   
+      <div>
+        <h1 className='text-2xl font-bold'>Sign Up Page</h1>
+        <i className='i-carbon-user text-4xl'></i>
+        <button className='i-carbon-sun' />
+        <div className='mt-4 flex w-full items-center justify-center gap-x-4 p-2 text-4xl'>
+          <div className='i-vscode-icons:file-type-light-pnpm' />
+          <div className='i-vscode-icons:file-type-light-pnpm?mask text-red-300' />
+        </div>
         <a href='https://vitejs.dev' target='_blank' rel='noreferrer'>
           <img src={viteLogo} className='logo' alt='Vite logo' />
         </a>
