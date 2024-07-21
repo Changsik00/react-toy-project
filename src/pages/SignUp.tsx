@@ -1,28 +1,40 @@
-import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import * as z from 'zod'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
 
+// Zod 스키마 정의
+// Zod 스키마 정의
+const schema = z
+  .object({
+    email: z
+      .string()
+      .email('유효한 이메일을 입력해주세요.')
+      .min(1, '이메일을 입력해주세요.'),
+    password: z
+      .string()
+      .min(6, '비밀번호는 최소 6자 이상이어야 합니다.')
+      .min(1, '비밀번호를 입력해주세요.'),
+    confirmPassword: z.string().min(1, '비밀번호 확인을 입력해주세요.'),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: '비밀번호가 일치하지 않습니다.',
+    path: ['confirmPassword'], // 에러가 발생하는 경로를 명시
+  })
+
+type FormData = z.infer<typeof schema>
+
 const SignUp = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState('')
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  })
 
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault()
-    setError('')
-
-    if (!email || !password || !confirmPassword) {
-      setError('모든 필드를 입력해주세요.')
-      return
-    }
-
-    if (password !== confirmPassword) {
-      setError('비밀번호가 일치하지 않습니다.')
-      return
-    }
-
-    // 여기에 회원가입 로직 추가 (ex: API 호출)
-    console.log('#@# params', { email, password, confirmPassword })
+  const onSubmit = (data: FormData) => {
+    console.log('#@# params', data)
   }
 
   return (
@@ -32,7 +44,7 @@ const SignUp = () => {
       </h1>
       <form
         className='space-y-6'
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit(onSubmit)}
         aria-describedby='error-message'
         noValidate
       >
@@ -48,11 +60,12 @@ const SignUp = () => {
             id='email'
             className='w-full rounded-lg border border-gray-300 p-3 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-700 dark:focus:border-blue-500'
             placeholder='Enter your email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+            {...register('email')}
             aria-required='true'
           />
+          {errors.email && (
+            <p className='text-red-500'>{errors.email.message}</p>
+          )}
         </div>
         <div>
           <label
@@ -66,11 +79,12 @@ const SignUp = () => {
             id='password'
             className='w-full rounded-lg border border-gray-300 p-3 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-700 dark:focus:border-blue-500'
             placeholder='Enter your password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
+            {...register('password')}
             aria-required='true'
           />
+          {errors.password && (
+            <p className='text-red-500'>{errors.password.message}</p>
+          )}
         </div>
         <div>
           <label
@@ -84,17 +98,13 @@ const SignUp = () => {
             id='confirmPassword'
             className='w-full rounded-lg border border-gray-300 p-3 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-700 dark:focus:border-blue-500'
             placeholder='Confirm your password'
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
+            {...register('confirmPassword')}
             aria-required='true'
           />
+          {errors.confirmPassword && (
+            <p className='text-red-500'>{errors.confirmPassword.message}</p>
+          )}
         </div>
-        {error && (
-          <p id='error-message' className='text-red-500' aria-live='assertive'>
-            {error}
-          </p>
-        )}
         <button
           type='submit'
           className='w-full rounded-lg bg-blue-500 p-3 text-white transition-colors hover:bg-blue-600'
