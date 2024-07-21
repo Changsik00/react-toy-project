@@ -2,25 +2,22 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
+import { useEffect } from 'react'
 
-// Zod 스키마 정의
 // Zod 스키마 정의
 const schema = z
   .object({
-    email: z
-      .string()
-      .email('유효한 이메일을 입력해주세요.')
-      .min(1, '이메일을 입력해주세요.'),
-    password: z
-      .string()
-      .min(6, '비밀번호는 최소 6자 이상이어야 합니다.')
-      .min(1, '비밀번호를 입력해주세요.'),
+    email: z.string().email('유효한 이메일을 입력해주세요.'),
+    password: z.string().min(6, '비밀번호는 최소 6자 이상이어야 합니다.'),
     confirmPassword: z.string().min(1, '비밀번호 확인을 입력해주세요.'),
   })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: '비밀번호가 일치하지 않습니다.',
-    path: ['confirmPassword'], // 에러가 발생하는 경로를 명시
-  })
+  .refine(
+    (data) => data.confirmPassword && data.password === data.confirmPassword,
+    {
+      message: '비밀번호가 일치하지 않습니다.',
+      path: ['confirmPassword'], // 에러가 발생하는 경로를 명시
+    },
+  )
 
 type FormData = z.infer<typeof schema>
 
@@ -29,9 +26,24 @@ const SignUp = () => {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
+    trigger,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
   })
+
+  const password = watch('password')
+  const confirmPassword = watch('confirmPassword')
+
+  useEffect(() => {
+    if (password && confirmPassword) {
+      trigger('confirmPassword')
+    }
+  }, [password, confirmPassword, trigger])
+
+  useEffect(() => {
+    console.log('@@@ errors', errors)
+  }, [errors])
 
   const onSubmit = (data: FormData) => {
     console.log('#@# params', data)
