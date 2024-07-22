@@ -2,7 +2,6 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
-import { useEffect } from 'react'
 
 // Zod 스키마 정의
 const schema = z
@@ -11,13 +10,10 @@ const schema = z
     password: z.string().min(6, '비밀번호는 최소 6자 이상이어야 합니다.'),
     confirmPassword: z.string().min(1, '비밀번호 확인을 입력해주세요.'),
   })
-  .refine(
-    (data) => data.confirmPassword && data.password === data.confirmPassword,
-    {
-      message: '비밀번호가 일치하지 않습니다.',
-      path: ['confirmPassword'], // 에러가 발생하는 경로를 명시
-    },
-  )
+  .refine((data) => data.password === data.confirmPassword, {
+    message: '비밀번호가 일치하지 않습니다.',
+    path: ['confirmPassword'], // 에러가 발생하는 경로를 명시
+  })
 
 type FormData = z.infer<typeof schema>
 
@@ -26,27 +22,25 @@ const SignUp = () => {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
     trigger,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
+    defaultValues: {
+      email: '',
+      password: '',
+      confirmPassword: '',
+    },
   })
-
-  const password = watch('password')
-  const confirmPassword = watch('confirmPassword')
-
-  useEffect(() => {
-    if (password && confirmPassword) {
-      trigger('confirmPassword')
-    }
-  }, [password, confirmPassword, trigger])
-
-  useEffect(() => {
-    console.log('@@@ errors', errors)
-  }, [errors])
 
   const onSubmit = (data: FormData) => {
     console.log('#@# params', data)
+  }
+
+  const handleChange = (name: keyof FormData) => () => {
+    trigger(name)
+    if (name === 'password') {
+      trigger('confirmPassword')
+    }
   }
 
   return (
@@ -72,7 +66,7 @@ const SignUp = () => {
             id='email'
             className='w-full rounded-lg border border-gray-300 p-3 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-700 dark:focus:border-blue-500'
             placeholder='Enter your email'
-            {...register('email')}
+            {...register('email', { onChange: handleChange('email') })}
             aria-required='true'
           />
           {errors.email && (
@@ -91,7 +85,7 @@ const SignUp = () => {
             id='password'
             className='w-full rounded-lg border border-gray-300 p-3 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-700 dark:focus:border-blue-500'
             placeholder='Enter your password'
-            {...register('password')}
+            {...register('password', { onChange: handleChange('password') })}
             aria-required='true'
           />
           {errors.password && (
@@ -110,7 +104,9 @@ const SignUp = () => {
             id='confirmPassword'
             className='w-full rounded-lg border border-gray-300 p-3 focus:border-blue-500 focus:outline-none dark:border-gray-700 dark:bg-gray-700 dark:focus:border-blue-500'
             placeholder='Confirm your password'
-            {...register('confirmPassword')}
+            {...register('confirmPassword', {
+              onChange: handleChange('confirmPassword'),
+            })}
             aria-required='true'
           />
           {errors.confirmPassword && (
