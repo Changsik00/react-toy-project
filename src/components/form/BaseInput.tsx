@@ -1,15 +1,15 @@
 import React from 'react'
 import { useController, useFormContext } from 'react-hook-form'
 
-interface InputProps {
+export interface InputProps {
   label?: string
   type?: string
   placeholder?: string
   required?: boolean
-  name: string // name을 명시적으로 받도록 변경
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>, name: string) => void
-  onBlur?: (event: React.FocusEvent<HTMLInputElement>, name: string) => void
-  onFocus?: (event: React.FocusEvent<HTMLInputElement>, name: string) => void
+  name: string
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void
+  onBlur?: (event: React.FocusEvent<HTMLInputElement>) => void
+  onFocus?: (event: React.FocusEvent<HTMLInputElement>) => void
 }
 
 const BaseInput: React.FC<InputProps> = ({
@@ -49,16 +49,18 @@ const BaseInput: React.FC<InputProps> = ({
         {...field}
         onChange={(e) => {
           field.onChange(e)
-          if (onChange) onChange(e, name)
+          if (onChange) onChange(e)
         }}
         onBlur={(e) => {
           field.onBlur()
-          if (onBlur) onBlur(e, name)
+          if (onBlur) onBlur(e)
         }}
         onFocus={(e) => {
-          if (onFocus) onFocus(e, name)
+          if (onFocus) onFocus(e)
         }}
-        className={`w-full rounded-lg border p-3 focus:outline-none ${error ? 'border-red-500' : 'border-gray-300'} ${error ? 'dark:border-red-500' : 'dark:border-gray-700'} focus:border-blue-500 dark:bg-gray-700 dark:focus:border-blue-500`}
+        className={`w-full rounded-lg border p-3 focus:outline-none ${
+          error ? 'border-red-500' : 'border-gray-300'
+        } ${error ? 'dark:border-red-500' : 'dark:border-gray-700'} focus:border-blue-500 dark:bg-gray-700 dark:focus:border-blue-500`}
         {...props}
       />
       {error && <p className='text-red-500'>{error.message}</p>}

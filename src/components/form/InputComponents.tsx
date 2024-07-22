@@ -1,7 +1,7 @@
 import React from 'react'
-import BaseInput from './BaseInput'
+import BaseInput, { InputProps } from './BaseInput'
 
-export const NameInput = (props) => (
+export const NameInput: React.FC<Omit<InputProps, 'name'>> = (props) => (
   <BaseInput
     name='name'
     label='Name'
@@ -10,7 +10,7 @@ export const NameInput = (props) => (
   />
 )
 
-export const EmailInput = (props) => (
+export const EmailInput: React.FC<Omit<InputProps, 'name'>> = (props) => (
   <BaseInput
     name='email'
     label='Email'
@@ -20,7 +20,7 @@ export const EmailInput = (props) => (
   />
 )
 
-export const PasswordInput = (props) => (
+export const PasswordInput: React.FC<Omit<InputProps, 'name'>> = (props) => (
   <BaseInput
     name='password'
     label='Password'
@@ -30,7 +30,9 @@ export const PasswordInput = (props) => (
   />
 )
 
-export const ConfirmPasswordInput = (props) => (
+export const ConfirmPasswordInput: React.FC<Omit<InputProps, 'name'>> = (
+  props,
+) => (
   <BaseInput
     name='confirmPassword'
     label='Confirm Password'

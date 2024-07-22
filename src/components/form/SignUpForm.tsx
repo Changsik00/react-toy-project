@@ -27,10 +27,12 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
   const { trigger, handleSubmit } = methods
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    name: keyof SignUpFormData,
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.FocusEvent<HTMLInputElement>,
   ) => {
-    trigger(name)
+    const { name } = event.target
+    trigger(name as keyof SignUpFormData)
     if (name === 'password') {
       trigger('confirmPassword')
     }
@@ -39,14 +41,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
   return (
     <FormProvider {...methods}>
       <form className='space-y-6' onSubmit={handleSubmit(onSubmit)} noValidate>
-        <NameInput name='name' required onBlur={handleChange} />
-        <EmailInput name='email' required onBlur={handleChange} />
-        <PasswordInput name='password' required onChange={handleChange} />
-        <ConfirmPasswordInput
-          name='confirmPassword'
-          required
-          onChange={handleChange}
-        />
+        <NameInput required onBlur={handleChange} />
+        <EmailInput required onBlur={handleChange} />
+        <PasswordInput required onChange={handleChange} />
+        <ConfirmPasswordInput required onChange={handleChange} />
         <button
           type='submit'
           className='w-full rounded-lg bg-blue-500 p-3 text-white transition-colors hover:bg-blue-600'
