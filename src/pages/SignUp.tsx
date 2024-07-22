@@ -4,15 +4,32 @@ import * as z from 'zod'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
 
 // Zod 스키마 정의
+const passwordSchema = z
+  .string()
+  .min(8, { message: '비밀번호는 최소 8자 이상이어야 합니다.' })
+  .max(20, { message: '비밀번호는 최대 20자 이하이어야 합니다.' })
+  .refine((password) => /[A-Z]/.test(password), {
+    message: '비밀번호에는 적어도 하나의 대문자가 포함되어야 합니다.',
+  })
+  .refine((password) => /[a-z]/.test(password), {
+    message: '비밀번호에는 적어도 하나의 소문자가 포함되어야 합니다.',
+  })
+  .refine((password) => /[0-9]/.test(password), {
+    message: '비밀번호에는 적어도 하나의 숫자가 포함되어야 합니다.',
+  })
+  .refine((password) => /[!@#$%^&*]/.test(password), {
+    message: '비밀번호에는 적어도 하나의 특수문자가 포함되어야 합니다.',
+  })
+
 const schema = z
   .object({
     email: z.string().email('유효한 이메일을 입력해주세요.'),
-    password: z.string().min(6, '비밀번호는 최소 6자 이상이어야 합니다.'),
+    password: passwordSchema,
     confirmPassword: z.string().min(1, '비밀번호 확인을 입력해주세요.'),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: '비밀번호가 일치하지 않습니다.',
-    path: ['confirmPassword'], // 에러가 발생하는 경로를 명시
+    path: ['confirmPassword'],
   })
 
 type FormData = z.infer<typeof schema>
