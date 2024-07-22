@@ -26,7 +26,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
 
   const { trigger, handleSubmit } = methods
 
-  const handleChange = (
+  const handleEvent = (
     event:
       | React.ChangeEvent<HTMLInputElement>
       | React.FocusEvent<HTMLInputElement>,
@@ -41,10 +41,10 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
   return (
     <FormProvider {...methods}>
       <form className='space-y-6' onSubmit={handleSubmit(onSubmit)} noValidate>
-        <NameInput required onBlur={handleChange} />
-        <EmailInput required onBlur={handleChange} />
-        <PasswordInput required onChange={handleChange} />
-        <ConfirmPasswordInput required onChange={handleChange} />
+        <NameInput required onBlur={handleEvent} />
+        <EmailInput required onBlur={handleEvent} />
+        <PasswordInput required onChange={handleEvent} />
+        <ConfirmPasswordInput required onChange={handleEvent} />
         <button
           type='submit'
           className='w-full rounded-lg bg-blue-500 p-3 text-white transition-colors hover:bg-blue-600'
