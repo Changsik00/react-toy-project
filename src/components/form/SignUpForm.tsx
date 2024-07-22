@@ -26,24 +26,26 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
 
   const { trigger, handleSubmit } = methods
 
-  const handleChange = (name: keyof SignUpFormData) => {
-    return () => {
-      trigger(name)
-      if (name === 'password') {
-        trigger('confirmPassword')
-      }
+  const handleChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    name: keyof SignUpFormData,
+  ) => {
+    trigger(name)
+    if (name === 'password') {
+      trigger('confirmPassword')
     }
   }
 
   return (
     <FormProvider {...methods}>
       <form className='space-y-6' onSubmit={handleSubmit(onSubmit)} noValidate>
-        <NameInput required onBlur={handleChange('name')} />
-        <EmailInput required onBlur={handleChange('email')} />
-        <PasswordInput required onChange={handleChange('password')} />
+        <NameInput name='name' required onBlur={handleChange} />
+        <EmailInput name='email' required onBlur={handleChange} />
+        <PasswordInput name='password' required onChange={handleChange} />
         <ConfirmPasswordInput
+          name='confirmPassword'
           required
-          onChange={handleChange('confirmPassword')}
+          onChange={handleChange}
         />
         <button
           type='submit'
