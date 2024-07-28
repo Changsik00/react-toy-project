@@ -7,8 +7,21 @@ import './index.css'
 import 'uno.css'
 import '@unocss/reset/normalize.css' // 리셋 스타일 불러오기
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-)
+async function enableMocking() {
+  // 개발 환경에서만 MSW를 활성화
+  if (import.meta.env.MODE !== 'development') {
+    return
+  }
+
+  const { worker } = await import('./mocks/browser')
+  worker.start()
+}
+
+enableMocking().then(() => {
+  ReactDOM.createRoot(document.getElementById('root')!).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  )
+  
+})

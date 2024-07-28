@@ -23,8 +23,27 @@ const Login = () => {
     methods.trigger(name as keyof LoginFormData)
   }
 
-  const onSubmit = (data: LoginFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     console.log(data)
+    try {
+      const response = await fetch('/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (response.status === 200) {
+        // Handle successful login (e.g., redirect to a dashboard)
+        console.log('Login successful')
+      } else {
+        // Handle error (e.g., show error message)
+        console.log('Login failed')
+      }
+    } catch (error) {
+      console.error('Error during login request:', error)
+    }
   }
 
   return (
