@@ -7,7 +7,7 @@ import {
   PasswordInput,
   ConfirmPasswordInput,
 } from './InputComponents'
-import { signUpSchema, SignUpFormData } from './validation-schemas'
+import { signUpSchema, SignUpFormData } from './validation-schemas/signUpSchema'
 
 interface SignUpFormProps {
   onSubmit: (data: SignUpFormData) => void

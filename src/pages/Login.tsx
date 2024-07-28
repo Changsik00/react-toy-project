@@ -1,45 +1,56 @@
-import ResponsiveLayout from '../components/common/ResponsiveLayout'
+import React from 'react'
+import { useForm, FormProvider } from 'react-hook-form'
 import { Link } from 'react-router-dom'
+import ResponsiveLayout from '../components/common/ResponsiveLayout'
+import { EmailInput, PasswordInput } from '../components/form/InputComponents'
+import {
+  loginSchema,
+  LoginFormData,
+} from '../components/form/validation-schemas/loginSchema'
+import { zodResolver } from '@hookform/resolvers/zod'
 
 const Login = () => {
+  const methods = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  })
+
+  const handleEvent = (
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.FocusEvent<HTMLInputElement>,
+  ) => {
+    const { name } = event.target
+    methods.trigger(name as keyof LoginFormData)
+  }
+
+  const onSubmit = (data: LoginFormData) => {
+    console.log(data)
+  }
+
   return (
     <ResponsiveLayout>
       <div className='mx-auto w-full max-w-md'>
         <h1 className='mb-6 text-center text-3xl font-bold text-gray-900 dark:text-white'>
           Login
         </h1>
-        <form className='space-y-6'>
-          <div>
-            <label className='mb-2 block text-gray-600 dark:text-gray-300'>
-              Email
-            </label>
-            <input
-              type='email'
-              className='w-full rounded-lg border border-gray-300 p-3 focus:border-blue-500 focus:outline-none'
-              placeholder='Enter your email'
-              required
-            />
-          </div>
-          <div>
-            <label className='mb-2 block text-gray-600 dark:text-gray-300'>
-              Password
-            </label>
-            <input
-              type='password'
-              className='w-full rounded-lg border border-gray-300 p-3 focus:border-blue-500 focus:outline-none'
-              placeholder='Enter your password'
-              required
-            />
-          </div>
-          <button
-            type='submit'
-            className='w-full rounded-lg bg-blue-500 p-3 text-white transition-colors hover:bg-blue-600'
+        <FormProvider {...methods}>
+          <form
+            onSubmit={methods.handleSubmit(onSubmit)}
+            className='space-y-6'
+            noValidate
           >
-            Login
-          </button>
-        </form>
+            <EmailInput required onBlur={handleEvent} />
+            <PasswordInput required onBlur={handleEvent} />
+            <button
+              type='submit'
+              className='w-full rounded-lg bg-blue-500 p-3 text-white transition-colors hover:bg-blue-600'
+            >
+              Login
+            </button>
+          </form>
+        </FormProvider>
         <p className='mt-6 text-center text-gray-600 dark:text-gray-300'>
-          Do you have an account?{' '}
+          Don't have an account?{' '}
           <Link to='/signup' className='text-blue-500 hover:underline'>
             Sign Up
           </Link>
