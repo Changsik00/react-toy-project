@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
 import SignUpForm from '../components/form/SignUpForm'
 import { SignUpFormData } from '../components/form/validation-schemas'
@@ -15,9 +16,9 @@ const SignUp = () => {
       <SignUpForm onSubmit={onSubmit} />
       <p className='mt-6 text-center text-gray-600 dark:text-gray-300'>
         Already have an account?{' '}
-        <a href='/login' className='text-blue-500 hover:underline'>
+        <Link to='/login' className='text-blue-500 hover:underline'>
           Log in
-        </a>
+        </Link>
       </p>
     </ResponsiveLayout>
   )

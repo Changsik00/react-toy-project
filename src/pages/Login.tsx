@@ -1,4 +1,5 @@
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
+import { Link } from 'react-router-dom'
 
 const Login = () => {
   return (
@@ -39,9 +40,9 @@ const Login = () => {
         </form>
         <p className='mt-6 text-center text-gray-600 dark:text-gray-300'>
           Do you have an account?{' '}
-          <a href='/signup' className='text-blue-500 hover:underline'>
+          <Link to='/signup' className='text-blue-500 hover:underline'>
             Sign Up
-          </a>
+          </Link>
         </p>
       </div>
     </ResponsiveLayout>
