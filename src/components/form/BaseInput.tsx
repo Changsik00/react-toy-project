@@ -47,6 +47,7 @@ const BaseInput: React.FC<InputProps> = ({
         type={type}
         placeholder={placeholder}
         {...field}
+        value={field.value || ''} // value가 undefined인 경우 빈 문자열로 대체
         onChange={(e) => {
           field.onChange(e)
           if (onChange) onChange(e)

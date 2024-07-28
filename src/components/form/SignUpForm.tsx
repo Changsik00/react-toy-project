@@ -16,12 +16,6 @@ interface SignUpFormProps {
 const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
   const methods = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    },
   })
 
   const { trigger, handleSubmit } = methods
