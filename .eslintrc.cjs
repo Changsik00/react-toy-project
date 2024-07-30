@@ -4,6 +4,7 @@ module.exports = {
     browser: true,
     es2022: true,
   },
+  ignorePatterns: ['public/mockServiceWorker.js'], 
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
@@ -26,7 +27,7 @@ module.exports = {
       'error',
       {
         singleQuote: true,
-        printWidth: 80,
+        printWidth: 120,
         tabWidth: 2,
         semi: false,
         jsxSingleQuote: true, // JSX에서 single quote 사용
