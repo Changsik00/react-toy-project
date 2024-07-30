@@ -3,10 +3,7 @@ import { useForm, FormProvider } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
 import { EmailInput, PasswordInput } from '../components/form/InputComponents'
-import {
-  loginSchema,
-  LoginFormData,
-} from '../components/form/validation-schemas/loginSchema'
+import { loginSchema, LoginFormData } from '../components/form/validation-schemas/loginSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const Login = () => {
@@ -14,11 +11,7 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
   })
 
-  const handleEvent = (
-    event:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLInputElement>,
-  ) => {
+  const handleEvent = (event: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
     const { name } = event.target
     methods.trigger(name as keyof LoginFormData)
   }
@@ -49,15 +42,9 @@ const Login = () => {
   return (
     <ResponsiveLayout>
       <div className='mx-auto w-full max-w-md'>
-        <h1 className='mb-6 text-center text-3xl font-bold text-gray-900 dark:text-white'>
-          Login
-        </h1>
+        <h1 className='mb-6 text-center text-3xl font-bold text-gray-900 dark:text-white'>Login</h1>
         <FormProvider {...methods}>
-          <form
-            onSubmit={methods.handleSubmit(onSubmit)}
-            className='space-y-6'
-            noValidate
-          >
+          <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-6' noValidate>
             <EmailInput required onBlur={handleEvent} />
             <PasswordInput required onBlur={handleEvent} />
             <button
@@ -69,7 +56,7 @@ const Login = () => {
           </form>
         </FormProvider>
         <p className='mt-6 text-center text-gray-600 dark:text-gray-300'>
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link to='/signup' className='text-blue-500 hover:underline'>
             Sign Up
           </Link>

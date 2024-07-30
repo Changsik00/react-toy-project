@@ -1,9 +1,6 @@
 import { ZodSchema } from 'zod'
 
-export async function parseJSON<T>(
-  request: Request,
-  schema: ZodSchema<T>,
-): Promise<T> {
+export async function parseJSON<T>(request: Request, schema: ZodSchema<T>): Promise<T> {
   const response = await request.json()
   const result = schema.safeParse(response)
 

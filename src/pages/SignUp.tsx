@@ -10,9 +10,7 @@ const SignUp = () => {
 
   return (
     <ResponsiveLayout>
-      <h1 className='mb-6 text-center text-3xl font-bold text-gray-900 dark:text-white'>
-        Create an Account
-      </h1>
+      <h1 className='mb-6 text-center text-3xl font-bold text-gray-900 dark:text-white'>Create an Account</h1>
       <SignUpForm onSubmit={onSubmit} />
       <p className='mt-6 text-center text-gray-600 dark:text-gray-300'>
         Already have an account?{' '}

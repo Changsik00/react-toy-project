@@ -1,12 +1,7 @@
 import React from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import {
-  NameInput,
-  EmailInput,
-  PasswordInput,
-  ConfirmPasswordInput,
-} from './InputComponents'
+import { NameInput, EmailInput, PasswordInput, ConfirmPasswordInput } from './InputComponents'
 import { signUpSchema, SignUpFormData } from './validation-schemas/signUpSchema'
 
 interface SignUpFormProps {
@@ -20,11 +15,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
 
   const { trigger, handleSubmit } = methods
 
-  const handleEvent = (
-    event:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.FocusEvent<HTMLInputElement>,
-  ) => {
+  const handleEvent = (event: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
     const { name } = event.target
     trigger(name as keyof SignUpFormData)
     if (name === 'password') {

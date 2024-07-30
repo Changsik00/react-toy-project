@@ -35,10 +35,7 @@ const BaseInput: React.FC<InputProps> = ({
   return (
     <div>
       {label && (
-        <label
-          htmlFor={name}
-          className='mb-2 block text-gray-600 dark:text-gray-300'
-        >
+        <label htmlFor={name} className='mb-2 block text-gray-600 dark:text-gray-300'>
           {label} {required && <span className='text-red-500'>*</span>}
         </label>
       )}
