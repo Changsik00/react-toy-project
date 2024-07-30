@@ -19,15 +19,22 @@ export const handlers = [
         })
       }
 
-      return new HttpResponse(JSON.stringify({ message: 'Invalid credentials' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' },
-      })
+      return new HttpResponse(
+        JSON.stringify({ message: 'Invalid credentials' }),
+        {
+          status: 401,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      )
     } catch (error) {
-      return new HttpResponse(JSON.stringify({ message: error.message }), {
+      let errorMessage = 'An unknown error occurred';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      return new HttpResponse(JSON.stringify({ message: errorMessage }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
-      })
+      });
     }
   }),
 ]
