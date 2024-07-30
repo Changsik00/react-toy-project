@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
@@ -7,19 +7,14 @@ import { loginSchema, LoginFormData } from '../components/form/validation-schema
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const Login = () => {
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
-
   const methods = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   })
 
-  const handleEvent = (event: React.ChangeEvent<HTMLInputElement> | React.FocusEvent<HTMLInputElement>) => {
-    const { name } = event.target
-    methods.trigger(name as keyof LoginFormData)
-  }
-
   const onSubmit = async (data: LoginFormData) => {
-    console.log(data)
+    setIsLoading(true)
     try {
       const response = await fetch('/login', {
         method: 'POST',
@@ -32,11 +27,12 @@ const Login = () => {
       if (response.status === 200) {
         navigate('/dashboard')
       } else {
-        // Handle error (e.g., show error message)
         console.log('Login failed')
       }
     } catch (error) {
       console.error('Error during login request:', error)
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -46,13 +42,13 @@ const Login = () => {
         <h1 className='mb-6 text-center text-3xl font-bold text-gray-900 dark:text-white'>Login</h1>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className='space-y-6' noValidate>
-            <EmailInput required onBlur={handleEvent} />
-            <PasswordInput required onBlur={handleEvent} />
+            <EmailInput required />
+            <PasswordInput required />
             <button
               type='submit'
               className='w-full rounded-lg bg-blue-500 p-3 text-white transition-colors hover:bg-blue-600'
             >
-              Login
+              {isLoading ? 'Loading...' : 'Login'}
             </button>
           </form>
         </FormProvider>

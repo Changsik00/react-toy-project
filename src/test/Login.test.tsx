@@ -1,5 +1,4 @@
-// src/tests/Login.test.tsx
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import Login from '../pages/Login'
 import Dashboard from '../pages/Dashboard'
@@ -32,6 +31,10 @@ describe('Login Component', () => {
     fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'qwerQWER1234!' } })
     fireEvent.click(screen.getByRole('button', { name: /login/i }))
 
-    expect(await screen.findByText(/Welcome!/i)).toBeInTheDocument()
+    // 로딩 인디케이터가 나타나는지 확인
+    await waitFor(() => expect(screen.getByRole('button')).toHaveTextContent(/Loading/i))
+
+    // 대시보드로의 리다이렉션 확인
+    await waitFor(() => expect(screen.getByText(/Welcome!/i)).toBeInTheDocument())
   })
 })

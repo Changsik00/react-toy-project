@@ -1,4 +1,4 @@
-import { http, HttpResponse } from 'msw'
+import { http, HttpResponse, delay } from 'msw'
 import { parseJSON } from '../utils/parseJSON'
 import { z } from 'zod'
 
@@ -9,6 +9,7 @@ const loginSchema = z.object({
 
 export const handlers = [
   http.post('/login', async ({ request }) => {
+    await delay(500)
     try {
       const data = await parseJSON(request, loginSchema)
       // data.email과 data.password 사용
@@ -19,22 +20,19 @@ export const handlers = [
         })
       }
 
-      return new HttpResponse(
-        JSON.stringify({ message: 'Invalid credentials' }),
-        {
-          status: 401,
-          headers: { 'Content-Type': 'application/json' },
-        },
-      )
+      return new HttpResponse(JSON.stringify({ message: 'Invalid credentials' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' },
+      })
     } catch (error) {
-      let errorMessage = 'An unknown error occurred';
+      let errorMessage = 'An unknown error occurred'
       if (error instanceof Error) {
-        errorMessage = error.message;
+        errorMessage = error.message
       }
       return new HttpResponse(JSON.stringify({ message: errorMessage }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
-      });
+      })
     }
   }),
 ]
