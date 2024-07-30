@@ -1,12 +1,14 @@
 import React from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
 import { EmailInput, PasswordInput } from '../components/form/InputComponents'
 import { loginSchema, LoginFormData } from '../components/form/validation-schemas/loginSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 
 const Login = () => {
+  const navigate = useNavigate()
+
   const methods = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   })
@@ -28,8 +30,7 @@ const Login = () => {
       })
 
       if (response.status === 200) {
-        // Handle successful login (e.g., redirect to a dashboard)
-        console.log('Login successful')
+        navigate('/dashboard')
       } else {
         // Handle error (e.g., show error message)
         console.log('Login failed')
