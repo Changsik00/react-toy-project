@@ -1,10 +1,18 @@
 import { useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
 import { EmailInput, PasswordInput } from '../components/form/InputComponents'
 import { loginSchema, LoginFormData } from '../components/form/validation-schemas/loginSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
+
+export interface LoginResponseData {
+  id: number
+  name: string
+  email: string
+  role: string
+}
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -13,9 +21,10 @@ const Login = () => {
     resolver: zodResolver(loginSchema),
   })
 
-  const onSubmit = async (data: LoginFormData) => {
-    setIsLoading(true)
-    try {
+  const queryClient = useQueryClient()
+
+  const loginMutation = useMutation<LoginResponseData, Error, LoginFormData>({
+    mutationFn: async (data: LoginFormData): Promise<LoginResponseData> => {
       const response = await fetch('/login', {
         method: 'POST',
         headers: {
@@ -24,16 +33,25 @@ const Login = () => {
         body: JSON.stringify(data),
       })
 
-      if (response.status === 200) {
-        navigate('/dashboard')
-      } else {
-        console.log('Login failed')
+      if (!response.ok) {
+        throw new Error('Login failed')
       }
-    } catch (error) {
+
+      return response.json()
+    },
+    onSuccess: (data) => {
+      queryClient.setQueryData(['user', data.id], data)
+      navigate('/dashboard')
+    },
+    onError: (error) => {
       console.error('Error during login request:', error)
-    } finally {
       setIsLoading(false)
-    }
+    },
+  })
+
+  const onSubmit = async (data: LoginFormData) => {
+    setIsLoading(true)
+    loginMutation.mutate(data)
   }
 
   return (

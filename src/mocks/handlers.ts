@@ -14,9 +14,15 @@ export const handlers = [
       const data = await parseJSON(request, loginSchema)
       // data.email과 data.password 사용
       if (data.email === 'test@test.com' && data.password === 'qwerQWER1234!') {
-        return new HttpResponse(null, {
+        const user = {
+          id: 1,
+          name: 'Changsik Jang',
+          email: data.email,
+          role: 'admin', // Additional user information
+        }
+        return new HttpResponse(JSON.stringify(user), {
           status: 200,
-          statusText: 'OK',
+          headers: { 'Content-Type': 'application/json' },
         })
       }
 
