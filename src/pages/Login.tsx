@@ -40,7 +40,7 @@ const Login = () => {
       return response.json()
     },
     onSuccess: (data) => {
-      queryClient.setQueryData(['user', data.id], data)
+      queryClient.setQueryData(['user'], data)
       navigate('/dashboard')
     },
     onError: (error) => {
