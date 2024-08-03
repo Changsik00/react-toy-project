@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { BrowserRouter as Router } from 'react-router-dom'
 import AppRoutes from './routes/AppRoutes'
 
 const App = () => {
@@ -18,9 +17,7 @@ const App = () => {
       <button onClick={toggleTheme} className='fixed right-4 top-4 rounded-full bg-blue-500 p-2 text-white'>
         Toggle {theme === 'light' ? 'Dark' : 'Light'} Mode
       </button>
-      <Router>
-        <AppRoutes />
-      </Router>
+      <AppRoutes />
     </div>
   )
 }

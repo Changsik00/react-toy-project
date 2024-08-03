@@ -1,19 +1,33 @@
+import { useContext, useState } from 'react'
+import { AuthContext } from '../providers/AuthProvider'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { login, fetchUser, LoginFormData, LoginResponseData } from '../api/auth'
-import { useState } from 'react'
+import { USER_QUERY_KEY } from '../constants/queryKeys'
 
-const USER_QUERY_KEY = ['user'] // 두번째 인자로 사용할 부분이 없어서 상수로 변경
+interface UseAuthProps {
+  user: LoginResponseData | null
+  handleLogin: (data: LoginFormData, onSuccess?: () => void) => void
+  handleLogout: () => void
+  refetchUser: () => Promise<void>
+  isLoading: boolean
+  error: Error | null
+}
 
-export const useAuth = () => {
+export const useAuth = (): UseAuthProps => {
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider')
+  }
+
   const [error, setError] = useState<Error | null>(null)
   const queryClient = useQueryClient()
 
-  const user = queryClient.getQueryData<LoginResponseData>(USER_QUERY_KEY) ?? null
+  const user = queryClient.getQueryData<LoginResponseData>([USER_QUERY_KEY]) ?? null
 
   const loginMutation = useMutation<LoginResponseData, Error, LoginFormData>({
     mutationFn: login,
     onSuccess: (data) => {
-      queryClient.setQueryData(USER_QUERY_KEY, data)
+      queryClient.setQueryData([USER_QUERY_KEY], data)
       setError(null)
     },
     onError: (error) => {
@@ -29,13 +43,13 @@ export const useAuth = () => {
   }
 
   const handleLogout = () => {
-    queryClient.removeQueries({ queryKey: USER_QUERY_KEY })
+    queryClient.removeQueries({ queryKey: [USER_QUERY_KEY] })
   }
 
   const refetchUser = async () => {
     try {
       const fetchedUser = await fetchUser(user?.id || 1) // 실제 사용자 ID로 변경 필요
-      queryClient.setQueryData(USER_QUERY_KEY, fetchedUser)
+      queryClient.setQueryData([USER_QUERY_KEY], fetchedUser)
     } catch (error) {
       console.error('Error fetching user:', error)
       setError(error as Error)
@@ -47,7 +61,7 @@ export const useAuth = () => {
     handleLogin,
     handleLogout,
     refetchUser,
-    isLoading: loginMutation.isPending, // 'isPending'으로 상태 체크
-    error, // 에러 상태 추가
+    isLoading: loginMutation.isPending,
+    error,
   }
 }
