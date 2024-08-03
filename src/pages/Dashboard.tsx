@@ -1,16 +1,14 @@
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
+import { LoginResponseData } from '../api/auth'
 
-type User = {
-  id: number
-  name: string
-  email: string
-  role: string
-}
 const Dashboard = () => {
   const navigate = useNavigate()
-  const { data: user } = useQuery<User>({ queryKey: ['user'] })
+  const { data: user } = useQuery<LoginResponseData>({
+    queryKey: ['user'],
+  })
+
   const handleLogout = () => {
     navigate('/login')
   }

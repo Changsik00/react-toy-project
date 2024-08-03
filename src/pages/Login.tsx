@@ -6,13 +6,7 @@ import ResponsiveLayout from '../components/common/ResponsiveLayout'
 import { EmailInput, PasswordInput } from '../components/form/InputComponents'
 import { loginSchema, LoginFormData } from '../components/form/validation-schemas/loginSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
-
-export interface LoginResponseData {
-  id: number
-  name: string
-  email: string
-  role: string
-}
+import { login, LoginResponseData } from '../api/auth'
 
 const Login = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -24,21 +18,7 @@ const Login = () => {
   const queryClient = useQueryClient()
 
   const loginMutation = useMutation<LoginResponseData, Error, LoginFormData>({
-    mutationFn: async (data: LoginFormData): Promise<LoginResponseData> => {
-      const response = await fetch('/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-
-      if (!response.ok) {
-        throw new Error('Login failed')
-      }
-
-      return response.json()
-    },
+    mutationFn: login,
     onSuccess: (data) => {
       queryClient.setQueryData(['user'], data)
       navigate('/dashboard')

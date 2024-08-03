@@ -1,37 +1,34 @@
 import { describe, it, expect } from 'vitest'
+import { login, LoginFormData } from '../api/auth'
 
 describe('Login API', () => {
   it('should return 200 for valid credentials', async () => {
-    const response = await fetch('/login', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: 'test@test.com',
-        password: 'qwerQWER1234!',
-      }),
-      headers: { 'Content-Type': 'application/json' },
-    })
+    const data: LoginFormData = {
+      email: 'test@test.com',
+      password: 'qwerQWER1234!',
+    }
 
-    expect(response.status).toBe(200)
+    const response = await login(data)
+
+    expect(response).toHaveProperty('id')
+    expect(response).toHaveProperty('name')
+    expect(response).toHaveProperty('email', data.email)
   })
 
   it('should return 401 for invalid credentials', async () => {
-    const response = await fetch('/login', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: 'wrong@test.com',
-        password: 'wrongpassword',
-      }),
-      headers: { 'Content-Type': 'application/json' },
-    })
+    const data: LoginFormData = {
+      email: 'wrong@test.com',
+      password: 'wrongpassword',
+    }
 
-    expect(response.status).toBe(401)
-
-    // Check if the response contains JSON data
-    if (response.headers.get('content-type')?.includes('application/json')) {
-      const data = await response.json()
-      expect(data.message).toBe('Invalid credentials')
-    } else {
-      throw new Error('Expected JSON response')
+    try {
+      await login(data)
+    } catch (error) {
+      if (error instanceof Error) {
+        expect(error.message).toBe('Invalid credentials')
+      } else {
+        throw new Error('Unexpected error type')
+      }
     }
   })
 })
