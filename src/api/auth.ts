@@ -20,14 +20,15 @@ export const login = async (data: LoginFormData): Promise<LoginResponseData> => 
   })
 
   if (!response.ok) {
-    throw new Error('Login failed')
+    const errorData = await response.json()
+    throw new Error(errorData.message)
   }
 
   return response.json()
 }
 
 export const fetchUser = async (userId: number): Promise<LoginResponseData> => {
-  const response = await fetch(`/user/${userId}`, {
+  const response = await fetch(`/users/${userId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -35,7 +36,8 @@ export const fetchUser = async (userId: number): Promise<LoginResponseData> => {
   })
 
   if (!response.ok) {
-    throw new Error('Failed to fetch user data')
+    const errorData = await response.json()
+    throw new Error(errorData.message)
   }
 
   return response.json()

@@ -1,38 +1,32 @@
-import { useState } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
 import { EmailInput, PasswordInput } from '../components/form/InputComponents'
 import { loginSchema, LoginFormData } from '../components/form/validation-schemas/loginSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { login, LoginResponseData } from '../api/auth'
+import { useAuth } from '../hooks/useAuth'
+import { useEffect } from 'react'
 
 const Login = () => {
-  const [isLoading, setIsLoading] = useState(false)
-  const navigate = useNavigate()
   const methods = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   })
+  const { handleLogin, isLoading, error } = useAuth()
+  const navigate = useNavigate()
 
-  const queryClient = useQueryClient()
-
-  const loginMutation = useMutation<LoginResponseData, Error, LoginFormData>({
-    mutationFn: login,
-    onSuccess: (data) => {
-      queryClient.setQueryData(['user'], data)
+  const onSubmit = (data: LoginFormData) => {
+    handleLogin(data, () => {
       navigate('/dashboard')
-    },
-    onError: (error) => {
-      console.error('Error during login request:', error)
-      setIsLoading(false)
-    },
-  })
-
-  const onSubmit = async (data: LoginFormData) => {
-    setIsLoading(true)
-    loginMutation.mutate(data)
+    })
   }
+
+  useEffect(() => {
+    if (error) {
+      // TODO: 에러가 있을 경우 toast를 통해 사용자에게 알림
+      // toast.error('Login failed: ' + error.message)
+      console.error('Login failed:', error)
+    }
+  }, [error])
 
   return (
     <ResponsiveLayout>

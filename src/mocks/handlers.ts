@@ -8,6 +8,7 @@ const loginSchema = z.object({
 })
 
 export const handlers = [
+  // Login 요청 핸들러
   http.post('/login', async ({ request }) => {
     await delay(500)
     try {
@@ -40,5 +41,29 @@ export const handlers = [
         headers: { 'Content-Type': 'application/json' },
       })
     }
+  }),
+  // Fetch user 요청 핸들러
+  http.get('/users/:userId', ({ params }) => {
+    const { userId } = params
+    const id = Array.isArray(userId) ? userId[0] : userId
+
+    if (parseInt(id) === 1) {
+      const user = {
+        id: 1,
+        name: 'Changsik Jang',
+        email: 'test@test.com',
+        role: 'admin',
+      }
+
+      return new HttpResponse(JSON.stringify(user), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+
+    return new HttpResponse(JSON.stringify({ message: 'User not found' }), {
+      status: 404,
+      headers: { 'Content-Type': 'application/json' },
+    })
   }),
 ]
