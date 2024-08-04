@@ -22,6 +22,7 @@ async function enableMocking() {
 const queryClient = new QueryClient()
 
 enableMocking().then(() => {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
       <I18nextProvider i18n={i18n}>

@@ -1,11 +1,10 @@
 import { Link } from 'react-router-dom'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
 import SignUpForm from '../components/form/SignUpForm'
-import { SignUpFormData } from '../components/form/validation-schemas'
-
+import { SignUpFormData } from '../components/form/validation-schemas/signUpSchema'
 const SignUp = () => {
   const onSubmit = (data: SignUpFormData) => {
-    console.log('#@# params', data)
+    console.info('#@# params', data)
   }
 
   return (
