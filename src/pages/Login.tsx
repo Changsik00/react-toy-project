@@ -1,5 +1,5 @@
 import { useForm, FormProvider } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
 import { EmailInput, PasswordInput } from '../components/form/InputComponents'
 import { loginSchema, LoginFormData } from '../components/form/validation-schemas/loginSchema'
@@ -13,10 +13,11 @@ const Login = () => {
   })
   const { handleLogin, isLoading, error } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
 
   const onSubmit = (data: LoginFormData) => {
     handleLogin(data, () => {
-      navigate('/dashboard')
+      navigate(location.state?.from ?? '/dashboard')
     })
   }
 
