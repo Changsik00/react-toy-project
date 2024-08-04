@@ -5,6 +5,7 @@ import Login from '../pages/Login'
 import SignUp from '../pages/SignUp'
 import Dashboard from '../pages/Dashboard'
 import NotFound from '../pages/NotFound'
+import Settings from '../pages/Settings'
 
 const AppRoutes = () => {
   return (
@@ -17,6 +18,7 @@ const AppRoutes = () => {
           <Route path='*' element={<NotFound />} />
           <Route element={<ProtectedRoute />}>
             <Route path='/dashboard' element={<Dashboard />} />
+            <Route path='/settings' element={<Settings />} />
             {/* Add other protected routes here */}
           </Route>
         </Routes>

@@ -10,14 +10,23 @@ const Dashboard = () => {
     navigate('/login')
   }
 
+  const goToSettings = () => {
+    navigate('/settings')
+  }
+
   return (
     <ResponsiveLayout>
       <div className='mx-auto w-full max-w-md'>
         <h1 className='text-center text-gray-600 dark:text-gray-300'>{user ? `Welcome, ${user.name}!` : 'Welcome!'}</h1>
         {user && (
-          <button onClick={handleLogout} className='mt-4 rounded-lg bg-red-500 p-3 text-white'>
-            Logout
-          </button>
+          <div className='mt-4'>
+            <button onClick={handleLogout} className='rounded-lg bg-red-500 p-3 text-white'>
+              Logout
+            </button>
+            <button onClick={goToSettings} className='ml-4 rounded-lg bg-blue-500 p-3 text-white'>
+              Settings
+            </button>
+          </div>
         )}
       </div>
     </ResponsiveLayout>
