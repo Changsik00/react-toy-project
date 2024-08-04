@@ -1,0 +1,14 @@
+{
+  "settings": "설정",
+  "darkMode": "다크 모드",
+  "languageSelection": "언어 선택",
+  "language": {
+    "en": "영어",
+    "ko": "한국어",
+    "ja": "일본어",
+    "zh": "중국어",
+    "fr": "프랑스어",
+    "de": "독일어",
+    "es": "스페인어"
+  }
+}

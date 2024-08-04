@@ -1,0 +1,14 @@
+{
+  "settings": "Settings",
+  "darkMode": "Dark Mode",
+  "languageSelection": "Language Selection",
+  "language": {
+    "en": "English",
+    "ko": "Korean",
+    "ja": "Japanese",
+    "zh": "Chinese",
+    "fr": "French",
+    "de": "German",
+    "es": "Spanish"
+  }
+}
