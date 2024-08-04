@@ -1,44 +1,74 @@
-export interface LoginResponseData {
-  id: number
-  name: string
-  email: string
-  role: string
+import { HttpClient } from './httpClient'
+import { z } from 'zod'
+import { Endpoint } from './types'
+
+export const LoginResponseDataSchema = z.object({
+  id: z.number(),
+  name: z.string(),
+  email: z.string(),
+  role: z.string(),
+})
+
+export const LoginFormDataSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+})
+
+const UserIdSchema = z.number()
+
+const ErrorResponseSchema = z.object({
+  message: z.string(),
+})
+
+const baseURL = import.meta.env.VITE_TYPECAST_API_URL
+const httpClient = new HttpClient({ baseURL })
+
+// Define types using Zod schemas
+export type LoginResponseData = z.infer<typeof LoginResponseDataSchema>
+export type LoginFormData = z.infer<typeof LoginFormDataSchema>
+export type ErrorResponse = z.infer<typeof ErrorResponseSchema>
+
+const loginEndpoint: Endpoint = {
+  url: '/login',
+  method: 'post',
+  noAuth: true,
 }
 
-export interface LoginFormData {
-  email: string
-  password: string
+const fetchUserEndpoint: Endpoint = {
+  url: '/users/:id',
+  method: 'get',
+  noAuth: true, // TODO: 차후 인증 필요
 }
 
 export const login = async (data: LoginFormData): Promise<LoginResponseData> => {
-  const response = await fetch('/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data),
-  })
+  // Validate data with Zod
+  LoginFormDataSchema.parse(data)
 
-  if (!response.ok) {
-    const errorData = await response.json()
-    throw new Error(errorData.message)
+  const response = await httpClient.request<LoginResponseData>(loginEndpoint, data)
+
+  if (response.status !== 200) {
+    // Validate error response with Zod
+    const errorData = ErrorResponseSchema.safeParse(response.data)
+    throw new Error(errorData.success ? errorData.data.message : 'Login failed')
   }
 
-  return response.json()
+  // Validate response with Zod
+  return LoginResponseDataSchema.parse(response.data)
 }
 
 export const fetchUser = async (userId: number): Promise<LoginResponseData> => {
-  const response = await fetch(`/users/${userId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
+  // Validate userId with Zod
+  UserIdSchema.parse(userId)
 
-  if (!response.ok) {
-    const errorData = await response.json()
-    throw new Error(errorData.message)
+  const endpoint = { ...fetchUserEndpoint, url: fetchUserEndpoint.url.replace(':id', userId.toString()) }
+  const response = await httpClient.request<LoginResponseData | ErrorResponse>(endpoint)
+
+  if (response.status !== 200) {
+    // Validate error response with Zod
+    const errorData = ErrorResponseSchema.safeParse(response.data)
+    throw new Error(errorData.success ? errorData.data.message : 'Fetch user failed')
   }
 
-  return response.json()
+  // Validate response with Zod
+  return LoginResponseDataSchema.parse(response.data)
 }
