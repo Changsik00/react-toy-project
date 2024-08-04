@@ -1,6 +1,6 @@
 import { createContext, ReactNode } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import { LoginResponseData } from '../api/auth'
+import { LoginResponseData } from '../api/endpoints/auth'
 
 interface AuthContextProps {
   user: LoginResponseData | null

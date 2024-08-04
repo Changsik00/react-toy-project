@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { login } from '../api/auth'
+import { login } from '../api/endpoints/auth'
 import { AxiosError } from 'axios'
 
 describe('Login API', () => {

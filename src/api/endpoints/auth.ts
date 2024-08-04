@@ -1,6 +1,6 @@
-import { HttpClient } from './httpClient'
+import { HttpClient } from '../httpClient'
 import { z } from 'zod'
-import { Endpoint } from './types'
+import { Endpoint } from '../types'
 
 export const LoginResponseDataSchema = z.object({
   id: z.number(),
@@ -20,7 +20,7 @@ const ErrorResponseSchema = z.object({
   message: z.string(),
 })
 
-const baseURL = import.meta.env.VITE_TYPECAST_API_URL
+const baseURL = import.meta.env.VITE_API_URL
 const httpClient = new HttpClient({ baseURL })
 
 // Define types using Zod schemas

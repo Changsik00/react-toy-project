@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { login, fetchUser, LoginFormData, LoginResponseData } from '../api/auth'
+import { login, fetchUser, LoginFormData, LoginResponseData } from '../api/endpoints/auth'
 import { USER_QUERY_KEY } from '../constants/queryKeys'
 
 interface UseAuthProps {
