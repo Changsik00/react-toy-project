@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider } from '../providers/AuthProvider'
 import ProtectedRoute from '../components/ProtectedRoute'
 import Login from '../pages/Login'
 import SignUp from '../pages/SignUp'
@@ -9,21 +8,19 @@ import Settings from '../pages/Settings'
 
 const AppRoutes = () => {
   return (
-    <AuthProvider>
-      <Router>
-        <Routes>
-          <Route path='/' element={<Navigate to='/dashboard' />} />
-          <Route path='/signup' element={<SignUp />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='*' element={<NotFound />} />
-          <Route element={<ProtectedRoute />}>
-            <Route path='/dashboard' element={<Dashboard />} />
-            <Route path='/settings' element={<Settings />} />
-            {/* Add other protected routes here */}
-          </Route>
-        </Routes>
-      </Router>
-    </AuthProvider>
+    <Router>
+      <Routes>
+        <Route path='/' element={<Navigate to='/dashboard' />} />
+        <Route path='/signup' element={<SignUp />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='*' element={<NotFound />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/settings' element={<Settings />} />
+          {/* Add other protected routes here */}
+        </Route>
+      </Routes>
+    </Router>
   )
 }
 
