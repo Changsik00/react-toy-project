@@ -1,30 +1,23 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+이 프로젝트는 개인 프로젝트로, 현재는 보일러플레이트를 만드는 단계입니다. 
 
-Currently, two official plugins are available:
+## 초기 설정
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+이 템플릿은 `React + TypeScript + Vite + SWC` 조합으로 초기 설정되어 있습니다.
 
-## Expanding the ESLint configuration
+자세한 내용은 [초기 설정 문서](./docs/initial-setup.md)를 참조하세요.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+## 주요 기능
+- **MSW**: `Mock` 데이터로 `API` 테스트
+- **Vitest**: 로그인 기능 테스트
+- **Tanstack Query**: 사용자 데이터 `fetch`
+- **Axios**: `HTTP` 클라이언트 구성
+- **Unocss**: 기본 스타일링은 `unocss`로 설정
+- **Form Validate**: `react-hook-form` + `zod`로 구현 
+- **Protected Route**: `react-router-dom` + `useAuth`를 사용해서 페이지 이동 제약
+- **Global Store**: `zustand`, `jotai`
+   - 현재는 `zustand`만 사용하고 있음 `top-down` 방식이기 때문에 차후 `bottom-up` 방식인 `jotai`도 도입할 예정   
+   - `jotai`는 `context api`를 대체 할 예정임
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
