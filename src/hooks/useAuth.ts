@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { login, fetchUser, LoginFormData, LoginResponseData } from '../api/endpoints/auth'
 import { USER_QUERY_KEY } from '../constants/queryKeys'
 
-interface UseAuthProps {
+interface UseAuthReturn {
   user: LoginResponseData | null
   handleLogin: (data: LoginFormData, onSuccess?: () => void) => void
   handleLogout: () => void
@@ -12,7 +12,7 @@ interface UseAuthProps {
   error: Error | null
 }
 
-export const useAuth = (): UseAuthProps => {
+export const useAuth = (): UseAuthReturn => {
   const [error, setError] = useState<Error | null>(null)
   const queryClient = useQueryClient()
 
