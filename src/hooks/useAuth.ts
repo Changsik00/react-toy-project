@@ -1,5 +1,4 @@
-import { useContext, useState } from 'react'
-import { AuthContext } from '../providers/AuthProvider'
+import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { login, fetchUser, LoginFormData, LoginResponseData } from '../api/auth'
 import { USER_QUERY_KEY } from '../constants/queryKeys'
@@ -14,11 +13,6 @@ interface UseAuthProps {
 }
 
 export const useAuth = (): UseAuthProps => {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
-
   const [error, setError] = useState<Error | null>(null)
   const queryClient = useQueryClient()
 
