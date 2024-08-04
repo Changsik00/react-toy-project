@@ -25,7 +25,6 @@ export const useAuth = (): UseAuthProps => {
       setError(null)
     },
     onError: (error) => {
-      console.error('Error during login request:', error)
       setError(error as Error)
     },
   })
@@ -45,7 +44,6 @@ export const useAuth = (): UseAuthProps => {
       const fetchedUser = await fetchUser(user?.id || 1) // 실제 사용자 ID로 변경 필요
       queryClient.setQueryData([USER_QUERY_KEY], fetchedUser)
     } catch (error) {
-      console.error('Error fetching user:', error)
       setError(error as Error)
     }
   }

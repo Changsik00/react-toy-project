@@ -4,7 +4,7 @@ module.exports = {
     browser: true,
     es2022: true,
   },
-  ignorePatterns: ['public/mockServiceWorker.js'], 
+  ignorePatterns: ['public/mockServiceWorker.js'],
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
@@ -40,7 +40,10 @@ module.exports = {
     ], // Prettier 규칙을 ESLint에 통합하고 설정을 포함
     semi: ['error', 'never'], // 세미콜론을 사용하지 않음
     quotes: ['error', 'single'], // 홑따옴표 사용 강제
-    'no-console': 'warn', // console.log 사용시 경고
+    'no-console': [
+      'error',
+      { allow: ['warn', 'info', 'error'] } // console.log 사용시 경고
+    ], 
     'no-debugger': 'warn', // debugger 사용시 경고
     '@typescript-eslint/explicit-function-return-type': 'off', // 함수 반환 타입 명시를 비활성화
     '@typescript-eslint/no-non-null-assertion': 'warn', // non-null assertion 사용 경고
