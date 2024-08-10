@@ -21,7 +21,13 @@ export const login = async ({ request }: { request: Request }) => {
   try {
     const { email, password } = await parseJSON(request, loginSchema)
 
-    const user = users.find((user) => user.email === email && user.password === password)
+    const user = users.find((user) => {
+      if (user.provider === 'firebase') {
+        // TODO: 차후 admin 에서 토큰 확인 하는것으로 변경
+        return user.email === email
+      }
+      return user.email === email && user.password === password
+    })
 
     if (user) {
       return createResponse(user)

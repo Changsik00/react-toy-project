@@ -5,10 +5,11 @@ import { NameInput, EmailInput, PasswordInput, ConfirmPasswordInput } from './In
 import { signUpSchema, SignUpFormData } from './validation-schemas/signUpSchema'
 
 interface SignUpFormProps {
+  isLoading?: boolean
   onSubmit: (data: SignUpFormData) => void
 }
 
-const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
+const SignUpForm: React.FC<SignUpFormProps> = ({ isLoading, onSubmit }) => {
   const methods = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
   })
@@ -34,7 +35,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({ onSubmit }) => {
           type='submit'
           className='w-full rounded-lg bg-blue-500 p-3 text-white transition-colors hover:bg-blue-600'
         >
-          Sign Up
+          {isLoading ? 'Loading...' : 'Sign Up'}
         </button>
       </form>
     </FormProvider>

@@ -6,6 +6,7 @@ import { loginSchema, LoginFormData } from '../components/form/validation-schema
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuth } from '../hooks/useAuth'
 import { useEffect } from 'react'
+import { getAuth as FirebaseAuth, signInWithEmailAndPassword } from 'firebase/auth'
 
 const Login = () => {
   const methods = useForm<LoginFormData>({
@@ -15,10 +16,19 @@ const Login = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const onSubmit = (data: LoginFormData) => {
-    updateUser(data, () => {
-      navigate(location.state?.from ?? '/dashboard')
-    })
+  const onSubmit = async (data: LoginFormData) => {
+    const auth = FirebaseAuth()
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password)
+      const user = userCredential.user
+      if (user) {
+        updateUser(data, () => {
+          navigate(location.state?.from ?? '/dashboard')
+        })
+      }
+    } catch (error) {
+      console.error('Error sending email:', error)
+    }
   }
 
   useEffect(() => {
