@@ -2,6 +2,7 @@ import { HttpClient } from '../httpClient'
 import { z } from 'zod'
 import { Endpoint } from '../types'
 
+// Zod 스키마 정의
 export const LoginResponseDataSchema = z.object({
   id: z.string(),
   name: z.string(),
@@ -22,49 +23,54 @@ const ErrorResponseSchema = z.object({
 const baseURL = import.meta.env.VITE_API_URL
 const httpClient = new HttpClient({ baseURL })
 
-// Define types using Zod schemas
 export type LoginResponseData = z.infer<typeof LoginResponseDataSchema>
 export type Token = z.infer<typeof TokenSchema>
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>
 
-const loginEndpoint: Endpoint = {
-  url: '/login',
-  method: 'post',
-  noAuth: true,
+// 공통 에러 처리 함수
+const handleErrorResponse = (response: any): ErrorResponse => {
+  const errorData = ErrorResponseSchema.safeParse(response.data)
+  throw new Error(errorData.success ? errorData.data.message : 'Request failed')
 }
 
-const fetchUserEndpoint: Endpoint = {
-  url: '/users/:id',
-  method: 'get',
-  noAuth: true, // TODO: 차후 인증 필요
-}
+// 엔드포인트 생성 함수
+const createEndpoint = (url: string, method: 'get' | 'post' | 'put' | 'delete', noAuth = false): Endpoint => ({
+  url,
+  method,
+  noAuth,
+})
 
-export const login = async (data: Token): Promise<LoginResponseData> => {
-  // Validate data with Zod
-  TokenSchema.parse(data)
-  const response = await httpClient.request<LoginResponseData>(loginEndpoint, data)
-  if (response.status !== 200) {
-    // Validate error response with Zod
-    const errorData = ErrorResponseSchema.safeParse(response.data)
-    throw new Error(errorData.success ? errorData.data.message : 'Login failed')
+// 타입 검증 및 API 요청을 통합하는 공통 함수
+const validatedApiRequest = async <T, S = undefined>(
+  endpoint: Endpoint, 
+  data: S | undefined, 
+  schema?: z.ZodType<S>
+): Promise<T> => {
+  if (schema && data !== undefined) {
+    schema.parse(data)  // 데이터 검증
   }
-  // Validate response with Zod
-  return LoginResponseDataSchema.parse(response.data)
+
+  const response = await httpClient.request<T | ErrorResponse>(endpoint, data)
+  
+  if (response.status !== 200) {
+    handleErrorResponse(response)
+  }
+
+  return response.data as T
+}
+
+// API 함수들
+export const login = async (data: Token): Promise<LoginResponseData> => {
+  return validatedApiRequest<LoginResponseData, Token>(
+    createEndpoint('/login', 'post', true), 
+    data, 
+    TokenSchema
+  )
 }
 
 export const fetchUser = async (id: string): Promise<LoginResponseData> => {
-  // Validate userId with Zod
-  UserIdSchema.parse(id)
-
-  const endpoint = { ...fetchUserEndpoint, url: fetchUserEndpoint.url.replace(':id', id.toString()) }
-  const response = await httpClient.request<LoginResponseData | ErrorResponse>(endpoint)
-
-  if (response.status !== 200) {
-    // Validate error response with Zod
-    const errorData = ErrorResponseSchema.safeParse(response.data)
-    throw new Error(errorData.success ? errorData.data.message : 'Fetch user failed')
-  }
-
-  // Validate response with Zod
-  return LoginResponseDataSchema.parse(response.data)
+  return validatedApiRequest<LoginResponseData>(
+    createEndpoint(`/users/${id}`, 'get', true), 
+    undefined
+  )
 }
