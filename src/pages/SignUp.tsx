@@ -16,10 +16,9 @@ const SignUp = () => {
     try {
       setIsLoading(true)
       const userCredential = await createUserWithEmailAndPassword(auth, data.email, data.password)
-      const user = userCredential.user
-      if (user) {
-        console.log('#@# user', user)
-        updateUser(data, () => {
+      const token = await userCredential.user.getIdToken()
+      if (token) {
+        updateUser({ token }, () => {
           navigate('/dashboard')
         })
       }

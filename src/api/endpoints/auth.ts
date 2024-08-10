@@ -3,18 +3,17 @@ import { z } from 'zod'
 import { Endpoint } from '../types'
 
 export const LoginResponseDataSchema = z.object({
-  id: z.number(),
+  id: z.string(),
   name: z.string(),
   email: z.string(),
   role: z.string(),
 })
 
-export const LoginFormDataSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
+export const TokenSchema = z.object({
+  token: z.string(),
 })
 
-const UserIdSchema = z.number()
+const UserIdSchema = z.string()
 
 const ErrorResponseSchema = z.object({
   message: z.string(),
@@ -25,7 +24,7 @@ const httpClient = new HttpClient({ baseURL })
 
 // Define types using Zod schemas
 export type LoginResponseData = z.infer<typeof LoginResponseDataSchema>
-export type LoginFormData = z.infer<typeof LoginFormDataSchema>
+export type Token = z.infer<typeof TokenSchema>
 export type ErrorResponse = z.infer<typeof ErrorResponseSchema>
 
 const loginEndpoint: Endpoint = {
@@ -40,27 +39,24 @@ const fetchUserEndpoint: Endpoint = {
   noAuth: true, // TODO: 차후 인증 필요
 }
 
-export const login = async (data: LoginFormData): Promise<LoginResponseData> => {
+export const login = async (data: Token): Promise<LoginResponseData> => {
   // Validate data with Zod
-  LoginFormDataSchema.parse(data)
-
+  TokenSchema.parse(data)
   const response = await httpClient.request<LoginResponseData>(loginEndpoint, data)
-
   if (response.status !== 200) {
     // Validate error response with Zod
     const errorData = ErrorResponseSchema.safeParse(response.data)
     throw new Error(errorData.success ? errorData.data.message : 'Login failed')
   }
-
   // Validate response with Zod
   return LoginResponseDataSchema.parse(response.data)
 }
 
-export const fetchUser = async (userId: number): Promise<LoginResponseData> => {
+export const fetchUser = async (id: string): Promise<LoginResponseData> => {
   // Validate userId with Zod
-  UserIdSchema.parse(userId)
+  UserIdSchema.parse(id)
 
-  const endpoint = { ...fetchUserEndpoint, url: fetchUserEndpoint.url.replace(':id', userId.toString()) }
+  const endpoint = { ...fetchUserEndpoint, url: fetchUserEndpoint.url.replace(':id', id.toString()) }
   const response = await httpClient.request<LoginResponseData | ErrorResponse>(endpoint)
 
   if (response.status !== 200) {

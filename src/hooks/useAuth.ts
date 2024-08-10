@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { login, fetchUser, LoginFormData, LoginResponseData } from '../api/endpoints/auth'
+import { login, fetchUser, Token, LoginResponseData } from '../api/endpoints/auth'
 import { USER_QUERY_KEY } from '../constants/queryKeys'
 import { useRemoveQueries } from './useRemoveQueries'
 
 interface UseAuthReturn {
   user: LoginResponseData | undefined
-  updateUser: (data: LoginFormData, onSuccess?: () => void) => void
+  updateUser: (data: Token, onSuccess?: () => void) => void
   clearUser: (onSuccess?: () => void) => void
   refetchUser: () => Promise<void>
   isLoading: boolean
@@ -20,7 +20,7 @@ export const useAuth = (): UseAuthReturn => {
 
   const user = queryClient.getQueryData<LoginResponseData>([USER_QUERY_KEY])
 
-  const loginMutation = useMutation<LoginResponseData, Error, LoginFormData>({
+  const loginMutation = useMutation<LoginResponseData, Error, Token>({
     mutationFn: login,
     gcTime: 1000 * 60 * 60, // 1시간
     onSuccess: (data) => {
@@ -32,7 +32,7 @@ export const useAuth = (): UseAuthReturn => {
     },
   })
 
-  const updateUser = (data: LoginFormData, onSuccess?: () => void) => {
+  const updateUser = (data: Token, onSuccess?: () => void) => {
     loginMutation.mutate(data, {
       onSuccess,
     })
@@ -44,8 +44,11 @@ export const useAuth = (): UseAuthReturn => {
   }
 
   const refetchUser = async () => {
+    if (!user) {
+      throw new Error('User is not logged in')
+    }
     try {
-      const fetchedUser = await fetchUser(user?.id || 1) // 실제 사용자 ID로 변경 필요
+      const fetchedUser = await fetchUser(user.id)
       queryClient.setQueryData([USER_QUERY_KEY], fetchedUser)
     } catch (error) {
       setError(error as Error)

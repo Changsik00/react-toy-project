@@ -1,28 +1,26 @@
 import { describe, it, expect } from 'vitest'
 import { login } from '../api/endpoints/auth'
-import { AxiosError } from 'axios'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../firebase' // Firebase 인증 가져오기
+import { FirebaseError } from 'firebase/app'
 
 describe('Login API', () => {
   it('should return 200 for valid credentials', async () => {
-    const response = await login({
-      email: 'test@test.com',
-      password: 'qwerQWER1234!',
-    })
-    expect(response.email).toBe('test@test.com')
+    // Firebase를 통해 유효한 사용자로 로그인
+    const userCredential = await signInWithEmailAndPassword(auth, 'lowmans00@gmail.com', 'TestTest001!')
+    const token = await userCredential.user.getIdToken()
+    // 로그인 API 호출
+    const response = await login({ token })
+    expect(response.email).toBe('lowmans00@gmail.com')
   })
 
   it('should return 401 for invalid credentials', async () => {
     try {
-      await login({
-        email: 'wrong@test.com',
-        password: 'wrongpassword',
-      })
+      // 잘못된 사용자로 로그인 시도
+      await signInWithEmailAndPassword(auth, 'lowmans00@gmail.com', 'wrongpassword')
     } catch (error) {
-      if (error instanceof AxiosError && error.response) {
-        expect(error.response.status).toBe(401)
-        expect(error.response.data.message).toBe('Invalid credentials')
-      } else {
-        throw error
+      if (error instanceof FirebaseError) {
+        expect(error.code).toBe('auth/invalid-credential')
       }
     }
   })

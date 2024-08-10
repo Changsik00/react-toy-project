@@ -1,13 +1,8 @@
 import { HttpResponse, delay } from 'msw'
 import { parseJSON } from '../../utils/parseJSON'
-import { z } from 'zod'
-
 import { users } from '../database/users'
-
-const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-})
+import { TokenSchema } from '../../api/endpoints/auth'
+import {jwtDecode} from 'jwt-decode'
 
 const createResponse = (data: object, status: number = 200) => {
   return new HttpResponse(JSON.stringify(data), {
@@ -19,16 +14,13 @@ const createResponse = (data: object, status: number = 200) => {
 export const login = async ({ request }: { request: Request }) => {
   await delay(500)
   try {
-    const { email, password } = await parseJSON(request, loginSchema)
-
-    const user = users.find((user) => {
-      if (user.provider === 'firebase') {
-        // TODO: 차후 admin 에서 토큰 확인 하는것으로 변경
-        return user.email === email
-      }
-      return user.email === email && user.password === password
-    })
-
+    const { token } = await parseJSON(request, TokenSchema)
+    // Firebase Admin SDK를 사용해 idToken에서 id 추출
+    const decodedToken = jwtDecode(token) as {
+      user_id: string, 
+    }
+    const uid = decodedToken.user_id
+    const user = users.find((user) => user.id === uid)
     if (user) {
       return createResponse(user)
     }
