@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { login, fetchUser, LoginFormData, LoginResponseData } from '../api/endpoints/auth'
 import { USER_QUERY_KEY } from '../constants/queryKeys'
+import { useRemoveQueries } from './useRemoveQueries'
 
 interface UseAuthReturn {
   user: LoginResponseData | null
@@ -15,11 +16,13 @@ interface UseAuthReturn {
 export const useAuth = (): UseAuthReturn => {
   const [error, setError] = useState<Error | null>(null)
   const queryClient = useQueryClient()
+  const { removeQuery } = useRemoveQueries()
 
   const user = queryClient.getQueryData<LoginResponseData>([USER_QUERY_KEY]) ?? null
 
   const loginMutation = useMutation<LoginResponseData, Error, LoginFormData>({
     mutationFn: login,
+    gcTime: 1000 * 60 * 60, // 1시간
     onSuccess: (data) => {
       queryClient.setQueryData([USER_QUERY_KEY], data)
       setError(null)
@@ -36,7 +39,7 @@ export const useAuth = (): UseAuthReturn => {
   }
 
   const handleLogout = () => {
-    queryClient.removeQueries({ queryKey: [USER_QUERY_KEY] })
+    removeQuery([USER_QUERY_KEY])
   }
 
   const refetchUser = async () => {
