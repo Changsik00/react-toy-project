@@ -6,8 +6,8 @@ import { useRemoveQueries } from './useRemoveQueries'
 
 interface UseAuthReturn {
   user: LoginResponseData | null
-  handleLogin: (data: LoginFormData, onSuccess?: () => void) => void
-  handleLogout: () => void
+  updateUser: (data: LoginFormData, onSuccess?: () => void) => void
+  clearUser: (onSuccess?: () => void) => void
   refetchUser: () => Promise<void>
   isLoading: boolean
   error: Error | null
@@ -32,14 +32,15 @@ export const useAuth = (): UseAuthReturn => {
     },
   })
 
-  const handleLogin = (data: LoginFormData, onSuccess?: () => void) => {
+  const updateUser = (data: LoginFormData, onSuccess?: () => void) => {
     loginMutation.mutate(data, {
       onSuccess,
     })
   }
 
-  const handleLogout = () => {
+  const clearUser = (onSuccess?: () => void) => {
     removeQuery([USER_QUERY_KEY])
+    onSuccess?.()
   }
 
   const refetchUser = async () => {
@@ -53,8 +54,8 @@ export const useAuth = (): UseAuthReturn => {
 
   return {
     user,
-    handleLogin,
-    handleLogout,
+    updateUser,
+    clearUser,
     refetchUser,
     isLoading: loginMutation.isPending,
     error,

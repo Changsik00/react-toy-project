@@ -1,11 +1,11 @@
 import { http } from 'msw'
-import { handleLogin } from './handleLogin'
-import { handleFetchUser } from './handleFetchUser'
+import { login } from './handleLogin'
+import { fetchUser } from './handleFetchUser'
 
 export const handlers = [
   // Auth Handlers
-  http.post('/login', handleLogin),
+  http.post('/login', login),
 
   // User Handlers
-  http.get('/users/:userId', handleFetchUser),
+  http.get('/users/:userId', fetchUser),
 ]

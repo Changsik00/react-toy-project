@@ -16,7 +16,7 @@ const createResponse = (data: object, status: number = 200) => {
   })
 }
 
-export const handleLogin = async ({ request }: { request: Request }) => {
+export const login = async ({ request }: { request: Request }) => {
   await delay(500)
   try {
     const { email, password } = await parseJSON(request, loginSchema)

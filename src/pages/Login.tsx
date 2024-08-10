@@ -11,12 +11,12 @@ const Login = () => {
   const methods = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   })
-  const { handleLogin, isLoading, error } = useAuth()
+  const { updateUser, isLoading, error } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
   const onSubmit = (data: LoginFormData) => {
-    handleLogin(data, () => {
+    updateUser(data, () => {
       navigate(location.state?.from ?? '/dashboard')
     })
   }

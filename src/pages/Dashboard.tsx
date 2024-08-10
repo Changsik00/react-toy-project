@@ -4,10 +4,10 @@ import { useAuth } from '../hooks/useAuth'
 
 const Dashboard = () => {
   const navigate = useNavigate()
-  const { user } = useAuth()
+  const { user, clearUser } = useAuth()
 
   const handleLogout = () => {
-    navigate('/login')
+    clearUser(() => navigate('/login'))
   }
 
   const goToSettings = () => {

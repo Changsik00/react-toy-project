@@ -10,7 +10,7 @@ const createResponse = (data: object, status: number = 200) => {
   })
 }
 
-export const handleFetchUser = ({ params }: { params: { userId: string | string[] } }) => {
+export const fetchUser = ({ params }: { params: { userId: string | string[] } }) => {
   const userId = Array.isArray(params.userId) ? params.userId[0] : params.userId
   const user = users.find((user) => user.id === parseInt(userId, 10))
 
