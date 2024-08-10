@@ -5,7 +5,7 @@ import { USER_QUERY_KEY } from '../constants/queryKeys'
 import { useRemoveQueries } from './useRemoveQueries'
 
 interface UseAuthReturn {
-  user: LoginResponseData | null
+  user: LoginResponseData | undefined
   updateUser: (data: LoginFormData, onSuccess?: () => void) => void
   clearUser: (onSuccess?: () => void) => void
   refetchUser: () => Promise<void>
@@ -18,7 +18,7 @@ export const useAuth = (): UseAuthReturn => {
   const queryClient = useQueryClient()
   const { removeQuery } = useRemoveQueries()
 
-  const user = queryClient.getQueryData<LoginResponseData>([USER_QUERY_KEY]) ?? null
+  const user = queryClient.getQueryData<LoginResponseData>([USER_QUERY_KEY])
 
   const loginMutation = useMutation<LoginResponseData, Error, LoginFormData>({
     mutationFn: login,
