@@ -8,19 +8,18 @@ export const LoginResponseSchema = z.object({
   email: z.string(),
   role: z.string(),
 })
-
 export const TokenSchema = z.object({
   token: z.string(),
 })
-
 // 타입 정의 (Zod 스키마에서 추론)
 export type LoginResponse = z.infer<typeof LoginResponseSchema>
 export type TokenResponse = z.infer<typeof TokenSchema>
 
 // API 함수들
+const BASE_URL = import.meta.env.VITE_API_URL
 export const login = async (data: TokenResponse): Promise<LoginResponse> => {
   return validatedApiRequest({
-    endpoint: { url: '/login', method: 'post', noAuth: true },
+    endpoint: { url: `${BASE_URL}/login`, method: 'post', noAuth: true },
     data,
     requestSchema: TokenSchema,
     responseSchema: LoginResponseSchema,
@@ -29,7 +28,7 @@ export const login = async (data: TokenResponse): Promise<LoginResponse> => {
 
 export const fetchUser = async (id: string): Promise<LoginResponse> => {
   return validatedApiRequest({
-    endpoint: { url: `/users/${id}`, method: 'get', noAuth: true },
+    endpoint: { url: `${BASE_URL}/users/${id}`, method: 'get', noAuth: true },
     responseSchema: LoginResponseSchema,
   })
 }

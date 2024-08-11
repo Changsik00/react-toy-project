@@ -11,17 +11,11 @@ function isAwsS3OrSignedUrl(url?: string): boolean {
   return awsS3Pattern.test(url) || signedUrlPattern.test(url)
 }
 
-type ApiConfig = {
-  baseURL: string
-}
-
 export class HttpClient {
   #instance: AxiosInstance
 
-  constructor(apiConfig: ApiConfig) {
-    this.#instance = axios.create({
-      baseURL: apiConfig.baseURL,
-    })
+  constructor() {
+    this.#instance = axios.create()
 
     this.#instance.interceptors.response.use((response) => {
       response.data = response.data.result || response.data

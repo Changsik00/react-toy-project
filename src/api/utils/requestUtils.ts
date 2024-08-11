@@ -49,4 +49,4 @@ export const validatedApiRequest = async <RequestSchema extends z.ZodTypeAny, Re
   }
 }
 
-export const httpClient = new HttpClient({ baseURL: import.meta.env.VITE_API_URL })
+export const httpClient = new HttpClient()
