@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { login, fetchUser, Token, LoginResponseData } from '../api/endpoints/auth'
+import { login, fetchUser, TokenResponse, LoginResponse } from '../api/endpoints/auth'
 import { USER_QUERY_KEY } from '../constants/queryKeys'
 import { useRemoveQueries } from './useRemoveQueries'
 
 interface UseAuthReturn {
-  user: LoginResponseData | undefined
-  updateUser: (data: Token, onSuccess?: () => void) => void
+  user: LoginResponse | undefined
+  updateUser: (data: TokenResponse, onSuccess?: () => void) => void
   clearUser: (onSuccess?: () => void) => void
   refetchUser: () => Promise<void>
   isLoading: boolean
@@ -18,9 +18,9 @@ export const useAuth = (): UseAuthReturn => {
   const queryClient = useQueryClient()
   const { removeQuery } = useRemoveQueries()
 
-  const user = queryClient.getQueryData<LoginResponseData>([USER_QUERY_KEY])
+  const user = queryClient.getQueryData<LoginResponse>([USER_QUERY_KEY])
 
-  const loginMutation = useMutation<LoginResponseData, Error, Token>({
+  const loginMutation = useMutation<LoginResponse, Error, TokenResponse>({
     mutationFn: login,
     gcTime: 1000 * 60 * 60, // 1시간
     onSuccess: (data) => {
@@ -32,7 +32,7 @@ export const useAuth = (): UseAuthReturn => {
     },
   })
 
-  const updateUser = (data: Token, onSuccess?: () => void) => {
+  const updateUser = (data: TokenResponse, onSuccess?: () => void) => {
     loginMutation.mutate(data, {
       onSuccess,
     })

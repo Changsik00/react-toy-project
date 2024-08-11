@@ -2,7 +2,7 @@ import { HttpResponse, delay } from 'msw'
 import { parseJSON } from '../../utils/parseJSON'
 import { users } from '../database/users'
 import { TokenSchema } from '../../api/endpoints/auth'
-import {jwtDecode} from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode'
 
 const createResponse = (data: object, status: number = 200) => {
   return new HttpResponse(JSON.stringify(data), {
@@ -17,7 +17,7 @@ export const login = async ({ request }: { request: Request }) => {
     const { token } = await parseJSON(request, TokenSchema)
     // Firebase Admin SDK를 사용해 idToken에서 id 추출
     const decodedToken = jwtDecode(token) as {
-      user_id: string, 
+      user_id: string
     }
     const uid = decodedToken.user_id
     const user = users.find((user) => user.id === uid)
