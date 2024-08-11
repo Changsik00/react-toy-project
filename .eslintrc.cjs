@@ -4,6 +4,11 @@ module.exports = {
     browser: true,
     es2022: true,
   },
+  settings: {
+    react: {
+      version: 'detect',
+    },
+  },
   ignorePatterns: ['public/mockServiceWorker.js'],
   extends: [
     'eslint:recommended',
@@ -42,8 +47,8 @@ module.exports = {
     quotes: ['error', 'single'], // 홑따옴표 사용 강제
     'no-console': [
       'error',
-      { allow: ['warn', 'info', 'error'] } // console.log 사용시 경고
-    ], 
+      { allow: ['warn', 'info', 'error'] }, // console.log 사용시 경고
+    ],
     'no-debugger': 'warn', // debugger 사용시 경고
     '@typescript-eslint/explicit-function-return-type': 'off', // 함수 반환 타입 명시를 비활성화
     '@typescript-eslint/no-non-null-assertion': 'warn', // non-null assertion 사용 경고
