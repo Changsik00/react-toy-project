@@ -2,11 +2,12 @@ import { HttpClient } from '../httpClient'
 import { z } from 'zod'
 import { Endpoint } from '../types'
 
+
 // Zod 스키마 정의
 export const LoginResponseDataSchema = z.object({
   id: z.string(),
   name: z.string(),
-  email: z.string(),
+  email: z.string(), 
   role: z.string(),
 })
 
@@ -14,18 +15,19 @@ export const TokenSchema = z.object({
   token: z.string(),
 })
 
-const UserIdSchema = z.string()
-
-const ErrorResponseSchema = z.object({
+export const ErrorResponseSchema = z.object({
   message: z.string(),
 })
+
+// 타입 정의 (Zod 스키마에서 추론)
+export type LoginResponseData = z.infer<typeof LoginResponseDataSchema>
+export type Token = z.infer<typeof TokenSchema>
+export type ErrorResponse = z.infer<typeof ErrorResponseSchema>
+
 
 const baseURL = import.meta.env.VITE_API_URL
 const httpClient = new HttpClient({ baseURL })
 
-export type LoginResponseData = z.infer<typeof LoginResponseDataSchema>
-export type Token = z.infer<typeof TokenSchema>
-export type ErrorResponse = z.infer<typeof ErrorResponseSchema>
 
 // 공통 에러 처리 함수
 const handleErrorResponse = (response: any): ErrorResponse => {
@@ -33,44 +35,52 @@ const handleErrorResponse = (response: any): ErrorResponse => {
   throw new Error(errorData.success ? errorData.data.message : 'Request failed')
 }
 
-// 엔드포인트 생성 함수
-const createEndpoint = (url: string, method: 'get' | 'post' | 'put' | 'delete', noAuth = false): Endpoint => ({
-  url,
-  method,
-  noAuth,
-})
+// 공통 API 요청 함수에서 객체로 인자 전달
+interface ApiRequestParams<RequestSchema extends z.ZodTypeAny, ResponseSchema extends z.ZodTypeAny> {
+  endpoint: Endpoint;
+  data?: z.infer<RequestSchema>;
+  requestSchema?: RequestSchema;
+  responseSchema?: ResponseSchema;
+}
 
-// 타입 검증 및 API 요청을 통합하는 공통 함수
-const validatedApiRequest = async <T, S = undefined>(
-  endpoint: Endpoint, 
-  data: S | undefined, 
-  schema?: z.ZodType<S>
-): Promise<T> => {
-  if (schema && data !== undefined) {
-    schema.parse(data)  // 데이터 검증
+const validatedApiRequest = async <RequestSchema extends z.ZodTypeAny, ResponseSchema extends z.ZodTypeAny>({
+  endpoint,
+  data,
+  requestSchema,
+  responseSchema,
+}: ApiRequestParams<RequestSchema, ResponseSchema>): Promise<z.infer<ResponseSchema>> => {
+  if (requestSchema && data) {
+    requestSchema.parse(data)  // 요청 데이터 검증
   }
 
-  const response = await httpClient.request<T | ErrorResponse>(endpoint, data)
+  const response = await httpClient.request<z.infer<ResponseSchema> | ErrorResponse>(endpoint, data)
   
   if (response.status !== 200) {
     handleErrorResponse(response)
   }
 
-  return response.data as T
+  // 응답 데이터 검증
+  if (responseSchema) {
+    // 응답 데이터 검증
+    return responseSchema.parse(response.data)
+  } else {
+    return response.data as z.infer<ResponseSchema>;
+  }
 }
 
 // API 함수들
 export const login = async (data: Token): Promise<LoginResponseData> => {
-  return validatedApiRequest<LoginResponseData, Token>(
-    createEndpoint('/login', 'post', true), 
+  return validatedApiRequest({
+    endpoint: { url: '/login', method: 'post', noAuth: true },
     data, 
-    TokenSchema
-  )
+    requestSchema: TokenSchema, 
+    responseSchema: LoginResponseDataSchema
+  })
 }
 
 export const fetchUser = async (id: string): Promise<LoginResponseData> => {
-  return validatedApiRequest<LoginResponseData>(
-    createEndpoint(`/users/${id}`, 'get', true), 
-    undefined
-  )
+  return validatedApiRequest({
+    endpoint: { url: `/users/${id}`, method: 'get', noAuth: true },
+    responseSchema: LoginResponseDataSchema
+  })
 }
