@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios'
 import { PollingManager } from './managers/pollingManager'
 import { TokenManager } from './managers/tokenManager'
-import { Endpoint, Payload } from './types'
+import { Endpoint, Payload } from './types/common'
 
 function isAwsS3OrSignedUrl(url?: string): boolean {
   if (!url) return false

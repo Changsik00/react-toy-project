@@ -1,5 +1,5 @@
 import { HttpClient } from '../httpClient'
-import { Endpoint, Payload } from '../types'
+import { Endpoint, Payload } from '../types/common'
 import { delay } from '../../utils/delay'
 
 export class PollingManager<T> {

@@ -1,4 +1,4 @@
-import { AsyncReturnFunction } from '../types'
+import { AsyncReturnFunction } from '../types/common'
 
 export class TokenManager {
   private static accessTokenFunction: AsyncReturnFunction<string> = async () => {

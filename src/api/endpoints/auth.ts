@@ -1,6 +1,6 @@
 import { HttpClient } from '../httpClient'
 import { z } from 'zod'
-import { Endpoint } from '../types'
+import { Endpoint } from '../types/common'
 import { AxiosResponse } from 'axios'
 
 // Zod 스키마 정의
