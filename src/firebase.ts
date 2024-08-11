@@ -13,6 +13,10 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig)
-getAnalytics(app)
+
+// NOTE: Test에서도 import하기 때문에 선택적으로 getAnalytics 호출
+if (typeof window !== 'undefined') {
+  getAnalytics(app)
+}
 
 export const auth = getAuth(app)
