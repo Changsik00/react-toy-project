@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import ProtectedRoute from '../components/ProtectedRoute'
-import Login from '../pages/Login'
-import SignUp from '../pages/SignUp'
-import Dashboard from '../pages/Dashboard'
-import NotFound from '../pages/NotFound'
-import Settings from '../pages/Settings'
+import ProtectedRoute from '@/components/ProtectedRoute'
+import Login from '@/pages/Login'
+import SignUp from '@/pages/SignUp'
+import Dashboard from '@/pages/Dashboard'
+import NotFound from '@/pages/NotFound'
+import Settings from '@/pages/Settings'
 
 const AppRoutes = () => {
   return (

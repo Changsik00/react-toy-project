@@ -1,5 +1,5 @@
-import ResponsiveLayout from '../components/common/ResponsiveLayout'
-import { useThemeStore } from '../stores/themeStore'
+import ResponsiveLayout from '@/components/common/ResponsiveLayout'
+import { useThemeStore } from '@/stores/themeStore'
 import { useTranslation } from 'react-i18next'
 
 const Settings = () => {

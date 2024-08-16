@@ -1,12 +1,12 @@
 import { useForm, FormProvider } from 'react-hook-form'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import ResponsiveLayout from '../components/common/ResponsiveLayout'
-import { EmailInput, PasswordInput } from '../components/form/InputComponents'
-import { loginSchema, LoginFormData } from '../components/form/validation-schemas/loginSchema'
+import ResponsiveLayout from '@/components/common/ResponsiveLayout'
+import { EmailInput, PasswordInput } from '@/components/form/InputComponents'
+import { loginSchema, LoginFormData } from '@/components/form/validation-schemas/loginSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect, useState } from 'react'
 import { getAuth as FirebaseAuth, signInWithEmailAndPassword } from 'firebase/auth'
-import { useAuthStore } from '../stores/authStore'
+import { useAuthStore } from '@/stores/authStore'
 
 const Login = () => {
   const methods = useForm<LoginFormData>({

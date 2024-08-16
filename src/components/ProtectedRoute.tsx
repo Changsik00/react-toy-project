@@ -1,6 +1,6 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import AccountVerificationLoading from './AccountVerificationLoading'
-import { useAuthStore } from '../stores/authStore'
+import { useAuthStore } from '@/stores/authStore'
 
 const ProtectedRoute = () => {
   const { user, isAuthLoading } = useAuthStore()

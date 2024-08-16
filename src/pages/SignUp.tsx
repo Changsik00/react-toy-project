@@ -1,11 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom'
-import ResponsiveLayout from '../components/common/ResponsiveLayout'
-import SignUpForm from '../components/form/SignUpForm'
-import { SignUpFormData } from '../components/form/validation-schemas/signUpSchema'
+import ResponsiveLayout from '@/components/common/ResponsiveLayout'
+import SignUpForm from '@/components/form/SignUpForm'
+import { SignUpFormData } from '@/components/form/validation-schemas/signUpSchema'
 import { getAuth as FirebaseAuth, createUserWithEmailAndPassword } from 'firebase/auth'
 import { useState } from 'react'
 import { FirebaseError } from 'firebase/app'
-import { useAuthStore } from '../stores/authStore'
+import { useAuthStore } from '@/stores/authStore'
 const SignUp = () => {
   const { updateUser } = useAuthStore()
   const navigate = useNavigate()

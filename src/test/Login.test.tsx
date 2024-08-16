@@ -3,8 +3,8 @@ import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
-import Login from '../pages/Login'
-import Dashboard from '../pages/Dashboard'
+import Login from '@/pages/Login'
+import Dashboard from '@/pages/Dashboard'
 
 // useAuthStore 모킹
 vi.mock('../stores/authStore', () => ({

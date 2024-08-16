@@ -3,9 +3,9 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { I18nextProvider } from 'react-i18next'
-import Settings from '../pages/Settings'
-import i18n from '../locales/i18n'
-import { useThemeStore } from '../stores/themeStore'
+import Settings from '@/pages/Settings'
+import i18n from '@/locales/i18n'
+import { useThemeStore } from '@/stores/themeStore'
 
 describe('Settings Page', () => {
   beforeEach(() => {

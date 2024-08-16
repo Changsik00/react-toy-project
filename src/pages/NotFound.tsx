@@ -1,4 +1,4 @@
-import ResponsiveLayout from '../components/common/ResponsiveLayout'
+import ResponsiveLayout from '@/components/common/ResponsiveLayout'
 
 const NotFound = () => {
   return (

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom'
-import ResponsiveLayout from '../components/common/ResponsiveLayout'
-import { useAuthStore } from '../stores/authStore'
+import ResponsiveLayout from '@/components/common/ResponsiveLayout'
+import { useAuthStore } from '@/stores/authStore'
 
 const Dashboard = () => {
   const navigate = useNavigate()

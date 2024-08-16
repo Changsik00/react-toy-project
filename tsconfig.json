@@ -26,7 +26,11 @@
     "noEmit": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src", "src/**/*.{ts,tsx,js,jsx}", "uno.config.ts", "vite.config.ts", ".eslintrc.cjs", "vitest.setup.ts", "vitest.config.ts"],
   "exclude": ["node_modules", "dist"]
