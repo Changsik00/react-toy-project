@@ -1,5 +1,5 @@
 import { AsyncReturnFunction } from '../types/common'
-
+import { auth } from '../../utils/firebase'
 export class TokenManager {
   private static accessTokenFunction: AsyncReturnFunction<string> = async () => {
     throw new Error('Access token function is not initialized')
@@ -13,6 +13,6 @@ export class TokenManager {
   }
 
   static async getAccessToken(): Promise<string> {
-    return this.accessTokenFunction()
+    return auth.currentUser?.getIdToken() ?? this.accessTokenFunction()
   }
 }

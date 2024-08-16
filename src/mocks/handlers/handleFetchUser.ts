@@ -1,22 +1,20 @@
-// src/handlers/user/handleFetchUser.ts
-
-import { HttpResponse } from 'msw'
+import { delay } from 'msw'
 import { users } from '../database/users'
+import { verifyToken } from './utils/tokenUtils'
+import { createSuccessResponse, createAuthErrorResponse } from './utils/responseUtils'
 
-const createResponse = (data: object, status: number = 200) => {
-  return new HttpResponse(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json' },
-  })
-}
+export const fetchUser = async ({ request }: { request: Request }) => {
+  await delay(500)
 
-export const fetchUser = ({ params }: { params: { userId: string | string[] } }) => {
-  const userId = Array.isArray(params.userId) ? params.userId[0] : params.userId
-  const user = users.find((user) => user.id === parseInt(userId, 10))
-
-  if (user) {
-    return createResponse(user)
+  const decodedToken = verifyToken(request.headers)
+  if (!decodedToken) {
+    return createAuthErrorResponse()
   }
 
-  return createResponse({ message: 'User not found' }, 404)
+  const user = users.find((user) => user.id === decodedToken.user_id)
+  if (user) {
+    return createSuccessResponse(user)
+  }
+
+  return createSuccessResponse({ message: 'User not found' }, 404)
 }

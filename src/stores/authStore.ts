@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
 import { onAuthStateChanged, User } from 'firebase/auth'
-import { auth } from '../firebase'
+import { auth } from '../utils/firebase'
 import { USER_QUERY_KEY } from '../constants/queryKeys'
 import { fetchUser, login, LoginResponse, TokenResponse } from '../api/endpoints/auth'
 import { removeQuery } from '../utils/removeQueries' // 유틸리티 함수 import

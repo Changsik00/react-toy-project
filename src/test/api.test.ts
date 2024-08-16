@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { login } from '../api/endpoints/auth'
 import { signInWithEmailAndPassword } from 'firebase/auth'
-import { auth } from '../firebase' // Firebase 인증 가져오기
+import { auth } from '../utils/firebase' // Firebase 인증 가져오기
 import { FirebaseError } from 'firebase/app'
 
 describe('Login API', () => {

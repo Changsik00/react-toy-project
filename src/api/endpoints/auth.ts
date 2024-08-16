@@ -19,7 +19,7 @@ export type TokenResponse = z.infer<typeof TokenSchema>
 const BASE_URL = import.meta.env.VITE_API_URL
 export const login = async (data: TokenResponse): Promise<LoginResponse> => {
   return validatedApiRequest({
-    endpoint: { url: `${BASE_URL}/login`, method: 'post', noAuth: true },
+    endpoint: { url: `${BASE_URL}/login`, method: 'post' },
     data,
     requestSchema: TokenSchema,
     responseSchema: LoginResponseSchema,
@@ -28,7 +28,7 @@ export const login = async (data: TokenResponse): Promise<LoginResponse> => {
 
 export const fetchUser = async (id: string): Promise<LoginResponse> => {
   return validatedApiRequest({
-    endpoint: { url: `${BASE_URL}/users/${id}`, method: 'get', noAuth: true },
+    endpoint: { url: `${BASE_URL}/users/${id}`, method: 'get' },
     responseSchema: LoginResponseSchema,
   })
 }
