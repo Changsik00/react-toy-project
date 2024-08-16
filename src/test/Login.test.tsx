@@ -7,8 +7,9 @@ import Dashboard from '@/pages/Dashboard'
 
 vi.mock('../stores/authStore', () => ({
   useAuthStore: () => ({
-    updateUser: vi.fn((data) => {
+    updateUser: vi.fn((data, onSettled) => {
       console.warn('updateUser called with:', data) // 호출 시 로그 출력
+      onSettled?.()
     }),
     isAuthLoading: false,
     error: null,
@@ -58,6 +59,11 @@ describe('Login Component', () => {
     const form = loginButton.closest('form')
     if (form) {
       fireEvent.submit(form)
+
+      // Wait for the redirect to happen
+      expect(await screen.findByTestId('location-display')).toHaveTextContent('/dashboard')
+      // DOM 내용을 출력하여 상태 확인
+      // screen.debug()
     }
   })
 })
