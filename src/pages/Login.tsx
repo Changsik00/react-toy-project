@@ -4,7 +4,7 @@ import ResponsiveLayout from '../components/common/ResponsiveLayout'
 import { EmailInput, PasswordInput } from '../components/form/InputComponents'
 import { loginSchema, LoginFormData } from '../components/form/validation-schemas/loginSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { getAuth as FirebaseAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { useAuthStore } from '../stores/authStore'
 
@@ -12,13 +12,15 @@ const Login = () => {
   const methods = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   })
-  const { updateUser, isAuthLoading, error } = useAuthStore()
+  const { updateUser, error } = useAuthStore()
+  const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
 
   const onSubmit = async (data: LoginFormData) => {
-    const auth = FirebaseAuth()
+    setIsLoading(true)
     try {
+      const auth = FirebaseAuth()
       const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password)
       const token = await userCredential.user.getIdToken()
       if (token) {
@@ -29,6 +31,7 @@ const Login = () => {
     } catch (error) {
       console.error('Error sending email:', error)
     }
+    setIsLoading(false)
   }
 
   useEffect(() => {
@@ -52,7 +55,7 @@ const Login = () => {
               type='submit'
               className='w-full rounded-lg bg-blue-500 p-3 text-white transition-colors hover:bg-blue-600'
             >
-              {isAuthLoading ? 'Loading...' : 'Login'}
+              {isLoading ? 'Loading...' : 'Login'}
             </button>
           </form>
         </FormProvider>
