@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { devtools } from 'zustand/middleware'
 
 const DARK_CLASS = 'dark'
 const LIGHT_CLASS = 'light'
@@ -52,33 +53,37 @@ const initializeTheme = () => {
   return { isDarkMode, initialLanguage, initialFontFamily }
 }
 
-export const useThemeStore = create<ThemeState>((set, get) => {
-  // 초기 테마 설정
-  const { isDarkMode, initialLanguage, initialFontFamily } = initializeTheme()
+export const useThemeStore = create<ThemeState>()(
+  devtools(
+    (set, get) => {
+      const { isDarkMode, initialLanguage, initialFontFamily } = initializeTheme()
 
-  return {
-    isDarkMode,
-    fontFamily: initialFontFamily,
-    language: initialLanguage,
-    toggleDarkMode: () =>
-      set((state) => {
-        const isDarkMode = !state.isDarkMode
-        if (isDarkMode !== state.isDarkMode) {
-          applyDarkModeClass(isDarkMode)
-          return { isDarkMode }
-        }
-        return state
-      }),
-    setLanguage: (language: string) => {
-      if (language === get().language) {
-        return
+      return {
+        isDarkMode,
+        fontFamily: initialFontFamily,
+        language: initialLanguage,
+        toggleDarkMode: () =>
+          set((state) => {
+            const isDarkMode = !state.isDarkMode
+            if (isDarkMode !== state.isDarkMode) {
+              applyDarkModeClass(isDarkMode)
+              return { isDarkMode }
+            }
+            return state
+          }),
+        setLanguage: (language: string) => {
+          if (language === get().language) {
+            return
+          }
+          const fontFamily = getFontByLanguage(language)
+          applyFontFamily(fontFamily)
+          set({ fontFamily, language })
+        },
       }
-      const fontFamily = getFontByLanguage(language)
-      applyFontFamily(fontFamily)
-      set({ fontFamily, language })
     },
-  }
-})
+    { name: 'themeStore' },
+  ),
+)
 
 // 시스템 다크 모드 변경 감지 이벤트 핸들러
 const handleDarkModeChange = (e: MediaQueryListEvent) => {

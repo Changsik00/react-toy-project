@@ -4,15 +4,15 @@ import ResponsiveLayout from '../components/common/ResponsiveLayout'
 import { EmailInput, PasswordInput } from '../components/form/InputComponents'
 import { loginSchema, LoginFormData } from '../components/form/validation-schemas/loginSchema'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useAuth } from '../hooks/useAuth'
 import { useEffect } from 'react'
 import { getAuth as FirebaseAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { useAuthStore } from '../stores/authStore'
 
 const Login = () => {
   const methods = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   })
-  const { updateUser, isLoading, error } = useAuth()
+  const { updateUser, isAuthLoading, error } = useAuthStore()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -48,10 +48,11 @@ const Login = () => {
             <EmailInput required />
             <PasswordInput required />
             <button
+              data-testid='login-button'
               type='submit'
               className='w-full rounded-lg bg-blue-500 p-3 text-white transition-colors hover:bg-blue-600'
             >
-              {isLoading ? 'Loading...' : 'Login'}
+              {isAuthLoading ? 'Loading...' : 'Login'}
             </button>
           </form>
         </FormProvider>

@@ -3,11 +3,11 @@ import ResponsiveLayout from '../components/common/ResponsiveLayout'
 import SignUpForm from '../components/form/SignUpForm'
 import { SignUpFormData } from '../components/form/validation-schemas/signUpSchema'
 import { getAuth as FirebaseAuth, createUserWithEmailAndPassword } from 'firebase/auth'
-import { useAuth } from '../hooks/useAuth'
 import { useState } from 'react'
 import { FirebaseError } from 'firebase/app'
+import { useAuthStore } from '../stores/authStore'
 const SignUp = () => {
-  const { updateUser } = useAuth()
+  const { updateUser } = useAuthStore()
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
 

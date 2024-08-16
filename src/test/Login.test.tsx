@@ -6,6 +6,26 @@ import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import Login from '../pages/Login'
 import Dashboard from '../pages/Dashboard'
 
+// useAuthStore 모킹
+vi.mock('../stores/authStore', () => ({
+  useAuthStore: () => ({
+    updateUser: vi.fn((data) => {
+      console.warn('updateUser called with:', data) // 호출 시 로그 출력
+    }),
+    isAuthLoading: false,
+    error: null,
+  }),
+}))
+
+vi.mock('firebase/auth', () => ({
+  getAuth: vi.fn(),
+  signInWithEmailAndPassword: vi.fn().mockResolvedValue({
+    user: {
+      getIdToken: vi.fn().mockResolvedValue('mocked-token'),
+    },
+  }),
+}))
+
 const createTestQueryClient = () => {
   return new QueryClient({
     defaultOptions: {
@@ -50,37 +70,16 @@ describe('Login Component', () => {
       </QueryClientProvider>,
     )
 
-    userEvent.type(screen.getByLabelText(/email/i), 'test@test.com')
-    userEvent.type(screen.getByLabelText(/password/i), 'qwerQWER1234!')
+    const emailInput = screen.getByLabelText(/email/i)
+    const passwordInput = screen.getByLabelText(/password/i)
+    const loginButton = screen.getByTestId('login-button')
 
-    const loginButton = screen.getByRole('button', { name: /login/i })
+    await userEvent.type(emailInput, 'lowmans00@gmail.com')
+    await userEvent.type(passwordInput, 'TestTest001!')
 
-    // FIXME: buttontype='submit' 의 경우 트리거가 안됨
-    // 버튼 클릭 X
-    userEvent.click(loginButton)
-    // form 제출 이벤트를 트리거하여 버튼 클릭 대신 사용 X
     const form = loginButton.closest('form')
     if (form) {
       fireEvent.submit(form)
     }
-
-    // TODO: 버튼 텍스트가 "Loading..."으로 변경되는지 확인
-    // await waitFor(
-    //   () => {
-    //     expect(loginButton).toHaveTextContent('Loading...')
-    //   },
-    //   { timeout: 3000 },
-    // )
-
-    // TODO: 대시보드 페이지가 렌더링되는 것을 확인하기
-    // await waitFor(
-    //   () => {
-    //     expect(screen.getByTestId('location-display')).toHaveTextContent('/dashboard')
-    //   },
-    //   { timeout: 3000 },
-    // )
-
-    // const welcomeMessage = await screen.findByText(/Welcome, Changsik Jang!/i)
-    // expect(welcomeMessage).toBeInTheDocument()
   })
 })

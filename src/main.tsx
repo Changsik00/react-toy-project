@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import App from './App'
 import './index.css'
-import 'uno.css'
+import 'virtual:uno.css'
 import '@unocss/reset/normalize.css' // 리셋 스타일 불러오기
 import { I18nextProvider } from 'react-i18next'
 import i18n from './locales/i18n'
@@ -19,7 +19,7 @@ async function enableMocking() {
   worker.start()
 }
 
-const queryClient = new QueryClient()
+export const queryClient = new QueryClient()
 
 enableMocking().then(() => {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

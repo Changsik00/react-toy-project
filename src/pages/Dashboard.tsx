@@ -1,13 +1,14 @@
 import { useNavigate } from 'react-router-dom'
 import ResponsiveLayout from '../components/common/ResponsiveLayout'
-import { useAuth } from '../hooks/useAuth'
+import { useAuthStore } from '../stores/authStore'
 
 const Dashboard = () => {
   const navigate = useNavigate()
-  const { user, clearUser } = useAuth()
+  const { user, clearUser } = useAuthStore()
 
   const handleLogout = () => {
-    clearUser(() => navigate('/login'))
+    clearUser()
+    navigate('/login')
   }
 
   const goToSettings = () => {

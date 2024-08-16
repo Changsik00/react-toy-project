@@ -1,9 +1,9 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
 import AccountVerificationLoading from './AccountVerificationLoading'
+import { useAuthStore } from '../stores/authStore'
 
 const ProtectedRoute = () => {
-  const { user, isAuthLoading } = useAuth()
+  const { user, isAuthLoading } = useAuthStore()
   const location = useLocation()
 
   if (isAuthLoading) {
