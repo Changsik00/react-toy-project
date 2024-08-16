@@ -1,12 +1,10 @@
 import { describe, it, expect } from 'vitest'
 import { fireEvent, render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import Login from '@/pages/Login'
 import Dashboard from '@/pages/Dashboard'
 
-// useAuthStore 모킹
 vi.mock('../stores/authStore', () => ({
   useAuthStore: () => ({
     updateUser: vi.fn((data) => {
@@ -26,50 +24,30 @@ vi.mock('firebase/auth', () => ({
   }),
 }))
 
-const createTestQueryClient = () => {
-  return new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-      },
-    },
-  })
-}
-
 const LocationDisplay = () => {
   const location = useLocation()
   return <div data-testid='location-display'>{location.pathname}</div>
 }
 
 describe('Login Component', () => {
-  it('renders the login form', () => {
+  beforeEach(() => {
     render(
-      <QueryClientProvider client={createTestQueryClient()}>
-        <MemoryRouter initialEntries={['/login']}>
-          <Routes>
-            <Route path='/login' element={<Login />} />
-          </Routes>
-        </MemoryRouter>
-      </QueryClientProvider>,
+      <MemoryRouter initialEntries={['/login']}>
+        <Routes>
+          <Route path='/login' element={<Login />} />
+          <Route path='/dashboard' element={<Dashboard />} />
+        </Routes>
+        <LocationDisplay />
+      </MemoryRouter>,
     )
+  })
 
+  it('renders the login form', () => {
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument()
     expect(screen.getByLabelText(/password/i)).toBeInTheDocument()
   })
 
   it('allows users to log in and redirects to dashboard', async () => {
-    render(
-      <QueryClientProvider client={createTestQueryClient()}>
-        <MemoryRouter initialEntries={['/login']}>
-          <Routes>
-            <Route path='/login' element={<Login />} />
-            <Route path='/dashboard' element={<Dashboard />} />
-          </Routes>
-          <LocationDisplay />
-        </MemoryRouter>
-      </QueryClientProvider>,
-    )
-
     const emailInput = screen.getByLabelText(/email/i)
     const passwordInput = screen.getByLabelText(/password/i)
     const loginButton = screen.getByTestId('login-button')
